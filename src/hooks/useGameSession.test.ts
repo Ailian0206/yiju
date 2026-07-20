@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useGameSession } from "./useGameSession";
 
 describe("useGameSession", () => {
@@ -113,5 +113,28 @@ describe("useGameSession", () => {
     // localStorage 的读取发生在 effect 里,renderHook 已经 flush 了初次 effect
     expect(second.result.current.state.clues).toBe(1);
     expect(second.result.current.state.log).toHaveLength(2);
+  });
+
+  it("恢复存档时,写回 localStorage 的每一次调用都不会用挂载瞬间的默认状态覆盖已有存档", () => {
+    // 回归用例:曾经因为"两个 useEffect 谁先跑"这种没有文档保证的时序
+    // 假设,导致挂载时会先用默认空状态写一次 localStorage,再被正确值
+    // 覆盖回去——生产环境里因为两个 effect 在同一次 flush 里跑完,
+    // 用户看不出问题,但这属于"结果碰巧对,原理是错的"。
+    const first = renderHook(() => useGameSession());
+    act(() => {
+      first.result.current.submit("问问门卫");
+    });
+    first.unmount();
+
+    const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
+    renderHook(() => useGameSession());
+
+    for (const call of setItemSpy.mock.calls) {
+      const written = JSON.parse(call[1] as string);
+      expect(written.clues, "不应该有任何一次写入是清空过的默认状态").toBe(1);
+      expect(written.log).toHaveLength(2);
+    }
+
+    setItemSpy.mockRestore();
   });
 });

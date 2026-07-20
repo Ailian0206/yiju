@@ -38,8 +38,12 @@ function makeLogEntry(kind: LogEntry["kind"], text: string): LogEntry {
 
 export function useGameSession() {
   const [state, setState] = useState<GameState>(createInitialState);
-  const hydratedRef = useRef(false);
   const resolverRef = useRef(createKeywordIntentResolver(lostCatVocabulary));
+  // 跳过挂载后第一次触发的保存:那一次的 state 闭包永远是初始默认值
+  // (即便下面的水合 effect 调用了 setState(saved),这个 effect 是靠自己
+  // 的 [state] 依赖在 state 真正变化后再跑一次,不依赖"两个 effect
+  // 按声明顺序在同一次 flush 里跑完"这种没有文档保证的时序)。
+  const skipNextSaveRef = useRef(true);
 
   useEffect(() => {
     const saved = loadSavedState();
@@ -50,13 +54,14 @@ export function useGameSession() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setState(saved);
     }
-    hydratedRef.current = true;
   }, []);
 
   useEffect(() => {
-    if (hydratedRef.current) {
-      saveState(state);
+    if (skipNextSaveRef.current) {
+      skipNextSaveRef.current = false;
+      return;
     }
+    saveState(state);
   }, [state]);
 
   const submit = useCallback((rawText: string) => {
