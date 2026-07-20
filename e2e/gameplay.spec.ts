@@ -54,6 +54,23 @@ test.describe("找猫 — 失败流程", () => {
   });
 });
 
+test.describe("找猫 — 新手引导", () => {
+  test("开局给出问门卫的建议按钮,点击后能像手打一样正常推进", async ({ page }) => {
+    await page.goto("/");
+
+    await expect(page.getByText("你想起门卫老周一直在楼下")).toBeVisible();
+    const suggestion = page.getByRole("button", { name: "问问门卫" });
+    await expect(suggestion).toBeVisible();
+
+    await suggestion.click();
+
+    await expect(page.getByText("门卫老周想了想").or(page.getByText("老周搓着手"))).toBeVisible();
+    // 建议按钮应该跟着进度更新,而不是停留在已经做过的动作上
+    await expect(page.getByRole("button", { name: "去绿化带" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "问问门卫" })).not.toBeVisible();
+  });
+});
+
 test.describe("找猫 — 存档", () => {
   test("刷新页面后能恢复上一次的进度", async ({ page }) => {
     await page.goto("/");

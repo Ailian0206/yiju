@@ -6,9 +6,11 @@ import styles from "./NarrativeLog.module.css";
 
 interface NarrativeLogProps {
   log: LogEntry[];
+  /** 日志为空时显示的开局叙述,由内容层提供(见 module.ts OPENING_NARRATION)。 */
+  openingText: string;
 }
 
-export function NarrativeLog({ log }: NarrativeLogProps) {
+export function NarrativeLog({ log, openingText }: NarrativeLogProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,9 +19,7 @@ export function NarrativeLog({ log }: NarrativeLogProps) {
 
   return (
     <div className={styles.log} role="log" aria-live="polite">
-      {log.length === 0 && (
-        <p className={styles.empty}>天快黑了,你想好第一步要做什么了吗?</p>
-      )}
+      {log.length === 0 && <p className={styles.empty}>{openingText}</p>}
       {log.map((entry) => (
         <p
           key={entry.id}
