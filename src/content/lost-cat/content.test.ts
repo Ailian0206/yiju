@@ -139,8 +139,25 @@ describe("找猫模组 — 跳关应该失败", () => {
   });
 });
 
+describe("找猫模组 — 呼叫", () => {
+  it("亲近感为远时首次呼喊会提升到有动静,并消耗行动", () => {
+    const state = playSession(["喊年糕"]);
+
+    expect(state.closeness).toBe("有动静");
+    expect(state.actionsRemaining).toBe(11);
+    expect(state.triggeredEventIds).toContain("call-name-distant");
+  });
+
+  it("亲近感已过远时再呼喊走 repeat 卡,不会把亲近感降回去", () => {
+    const state = playSession(["去绿化带", "仔细找找", "喊年糕"]);
+    // 绿化带搜证已把亲近感提到有动静;再喊不应改档、也不应命中 distant 卡
+    expect(state.closeness).toBe("有动静");
+    expect(state.triggeredEventIds).not.toContain("call-name-distant");
+  });
+});
+
 describe("找猫模组 — 必败序列", () => {
-  it("只做无效行动(如反复呼喊)而不推进线索,天黑后判定失败", () => {
+  it("只做呼喊而不推进线索,天黑后判定失败(首次呼喊仍可提一档亲近感)", () => {
     const finalState = playSession([
       "喊年糕",
       "喊年糕",
@@ -155,7 +172,8 @@ describe("找猫模组 — 必败序列", () => {
 
     expect(finalState.status).toBe("lost");
     expect(finalState.sky).toBe("天黑");
-    expect(finalState.closeness).toBe("远");
+    // 产品文档 §6:喊名字可提一档;纯呼喊仍找不到猫,通关不了
+    expect(finalState.closeness).toBe("有动静");
   });
 
   it("失败后继续输入不会让游戏复活或状态异常变化", () => {

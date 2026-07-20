@@ -77,6 +77,11 @@ export interface EventCard {
   targetId?: string;
   /** 前置旗帜要求,全部为 true 才能触发。 */
   requiresFlags?: string[];
+  /**
+   * 仅当当前亲近感等于该值时可触发。用于呼叫等"按进度分档"的事件,
+   * 避免无条件改写 closeness 把更近的档位降回去。
+   */
+  requiresCloseness?: Closeness;
   /** 是否允许重复触发(如"我刚才都说了…"这类应付文案);默认 false,只触发一次。 */
   repeatable?: boolean;
   /** 触发后的状态效果。 */
