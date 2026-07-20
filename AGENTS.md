@@ -1,10 +1,12 @@
-# AGENTS.md
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
 
-本项目的 Agent 工作约定见 [`AGENT.md`](AGENT.md)。
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->
 
-说明:保留 `AGENTS.md` 是为了兼容 Codex / Claude / 其他 agent 对复数文件名的默认识别;实际规范以 `AGENT.md` 为准。
+# Project Guidelines
 
-## Project Guidelines
+本项目的完整 Agent 工作约定见 [`AGENT.md`](AGENT.md)。以下是要点(与 `AGENT.md` 冲突时以 `AGENT.md` 为准):
 
 1. Read `AGENT.md`, `PROJECT_STATUS.md`, and `docs/development-plan.md` before changing code.
 2. Use test-driven development for behavior changes: verify RED, implement the minimum GREEN, then refactor.
