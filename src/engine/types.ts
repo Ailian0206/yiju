@@ -43,11 +43,16 @@ export interface LogEntry {
 }
 
 /**
- * 一次行动的结果:拒绝 / 触发了某个事件 / 通过但未命中任何事件卡,三选一。
- * 用可辨识联合而非独立的 rejected+triggeredEventId,避免出现
- * "既 rejected 又有 triggeredEventId" 这种类型层面本不该存在的状态。
+ * 一次行动的结果,四选一,用可辨识联合而非独立的布尔/可空字段拼凑,
+ * 避免出现"既 rejected 又有 triggeredEventId"这种类型上可表达但业务上非法的状态:
+ *
+ * - unknown:输入无法解析成任何意图,不消耗行动次数(产品文档 §4.2)。
+ * - rejected:意图解析成功,但命中的事件卡前置旗帜不满足(如无手电照车库),消耗行动次数。
+ * - triggered:命中某张事件卡并应用了效果。
+ * - noop:意图合法但没有命中任何事件卡(如在错误地点搜证),仍消耗行动次数,兜底叙述。
  */
 export type ActionOutcome =
+  | { kind: "unknown" }
   | { kind: "rejected" }
   | { kind: "triggered"; eventId: string }
   | { kind: "noop" };
@@ -67,9 +72,11 @@ export interface EventCard {
   targetId?: string;
   /** 前置旗帜要求,全部为 true 才能触发。 */
   requiresFlags?: string[];
+  /** 是否允许重复触发(如"我刚才都说了…"这类应付文案);默认 false,只触发一次。 */
+  repeatable?: boolean;
   /** 触发后的状态效果。 */
   effects: EventEffects;
-  /** 叙述模板 key 列表,narrator 随机选一条(P0 mock 实现)。 */
+  /** 叙述模板 key 列表,narrator 随机选一条(P0 mock 实现)。至少一条,由内容层加载时校验。 */
   templateKeys: string[];
 }
 
