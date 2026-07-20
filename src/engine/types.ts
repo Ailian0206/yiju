@@ -43,17 +43,22 @@ export interface LogEntry {
 }
 
 /**
- * 一次行动的结果,四选一,用可辨识联合而非独立的布尔/可空字段拼凑,
+ * 一次行动的结果,五选一,用可辨识联合而非独立的布尔/可空字段拼凑,
  * 避免出现"既 rejected 又有 triggeredEventId"这种类型上可表达但业务上非法的状态:
  *
  * - unknown:输入无法解析成任何意图,不消耗行动次数(产品文档 §4.2)。
- * - rejected:意图解析成功,但命中的事件卡前置旗帜不满足(如无手电照车库),消耗行动次数。
+ * - moved:切换了地点。移动本身不消耗行动次数——产品文档 §4.5 的"7 步通关"
+ *   估算只数搜证/对话/使用等交互动作,不把"走过去"算作独立一步。
+ * - rejected:意图解析成功,但命中的事件卡前置旗帜不满足(如无手电照车库),
+ *   或 finish 时机未到;eventId 标识具体卡,供 narrator 给出针对性文案
+ *   (而不是每处拒绝都用同一句"时机未到"糊弄过去)。
  * - triggered:命中某张事件卡并应用了效果。
  * - noop:意图合法但没有命中任何事件卡(如在错误地点搜证),仍消耗行动次数,兜底叙述。
  */
 export type ActionOutcome =
   | { kind: "unknown" }
-  | { kind: "rejected" }
+  | { kind: "moved"; locationId: string }
+  | { kind: "rejected"; eventId: string }
   | { kind: "triggered"; eventId: string }
   | { kind: "noop" };
 
@@ -84,7 +89,6 @@ export interface EventEffects {
   clues?: number;
   closeness?: Closeness;
   setFlags?: string[];
-  moveToLocationId?: string;
 }
 
 /** 意图解析器接口:P0 用关键词表实现,P1 可换 LLM 实现,签名不变。 */
