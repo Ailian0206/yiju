@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**P1(DeepSeek 叙述接入)真实冒烟已通过,待开 PR 合并**
+当前阶段:**找猫模组 P1(DeepSeek)已合并;下一步补产品文档里的 `call` 呼叫反馈,再邀请试玩**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
 ## 里程碑(找猫模组)
@@ -14,7 +14,7 @@
 | M3 | 界面(叙事区、状态面板、输入区、结局页) | 已完成 | [#4](https://github.com/Ailian0206/yiju/pull/4) |
 | M4 | P0 收尾自测、README、状态归档 | 已完成 | [#5](https://github.com/Ailian0206/yiju/pull/5) |
 | 试玩反馈修复 | 新手引导(开局叙述提示 + 建议行动按钮) | 已完成 | [#6](https://github.com/Ailian0206/yiju/pull/6) |
-| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 真实冒烟已通过(需显式关闭 V4 thinking) | [#7](https://github.com/Ailian0206/yiju/pull/7) |
+| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 已完成(真实冒烟通过) | [#7](https://github.com/Ailian0206/yiju/pull/7) |
 
 ## P0 自测(对照产品文档 §9 成功标准)
 
@@ -32,7 +32,7 @@
 
 ## 已知的范围内取舍(非 bug,记录以防误判)
 
-- `call`(呼叫)意图目前没有任何事件卡,始终落到"填词区"(P0 是通用兜底文案,P1 配置了 key 后会走 LLM 生成),不会像产品文档 §6 描述的那样"概率性提升亲近感"——这是内容深度问题,不是本次 LLM 接入的范围。
+- `call`(呼叫)意图目前没有任何事件卡,始终落到"填词区"(P1 会走 LLM)——与产品文档 §6「喊名字 → 亲近感可提一档」仍有差距,列为合并 M5 后的下一项内容补齐。
 - 字体用系统中文字体栈(PingFang SC / Songti SC / Microsoft YaHei),没有用 `next/font/google` 拉 Noto Serif/Sans SC——本地网络环境下拉不动完整字重文件,详见 `feat/m3-ui` PR 说明。
 - `engine/intent.ts` 仍是纯关键词解析,没有接 LLM——产品文档 §9 标准 2(自然语言、不用背指令)已经用 40+ 用例和真实试玩验证通过,暂时没有接的必要;`development-plan.md` 里本来就把它标注为"仅当关键词命中率实测不足时才做"。
 - 每局 LLM 调用预算(默认 15 次)只在内存里,不写进 localStorage 存档——刷新页面会让预算重新计满,不是精确的"整局最多 N 次"。个人练习项目场景下影响可以忽略,真要做持久化预算需要把计数也序列化进存档。
@@ -44,5 +44,5 @@
 
 ## 备注
 
-- 本仓由 Claude Code 独立驱动开发,无 Codex 协作;PR 合并前用同进程 `code-reviewer` 子代理做独立审查(见 `AGENT.md`)。
-- M0–M4 由 Claude Code 自主推进,已完成;每个里程碑均经过 `code-reviewer` 独立审查并修复其发现的问题后再合并。
+- 本仓由 Claude Code / Cursor Agent 驱动开发;PR 合并前做独立审查(见 `AGENT.md`)。
+- M0–M5 已完成;M5 安全审查无 CRITICAL,HIGH(服务端限流)记为公开部署前置条件。
