@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**找猫模组 P1 已合并;`call` 呼叫反馈补齐进行中(`feat/call-echo-events`)**
+当前阶段:**找猫模组 P0+P1 功能闭环完成;建议本地试玩确认后,再决定是否部署上线**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
 ## 里程碑(找猫模组)
@@ -15,6 +15,7 @@
 | M4 | P0 收尾自测、README、状态归档 | 已完成 | [#5](https://github.com/Ailian0206/yiju/pull/5) |
 | 试玩反馈修复 | 新手引导(开局叙述提示 + 建议行动按钮) | 已完成 | [#6](https://github.com/Ailian0206/yiju/pull/6) |
 | M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 已完成(真实冒烟通过) | [#7](https://github.com/Ailian0206/yiju/pull/7) |
+| 呼叫补齐 | `call` 事件卡 + `requiresCloseness`(远时首次喊名提档) | 已完成 | [#8](https://github.com/Ailian0206/yiju/pull/8) |
 
 ## P0 自测(对照产品文档 §9 成功标准)
 
