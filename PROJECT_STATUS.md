@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**M2 找猫模组内容开发中**
+当前阶段:**M3 界面开发中**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
 ## 里程碑(找猫模组 P0)
@@ -10,7 +10,7 @@
 | --- | --- | --- | --- |
 | M0 | 项目骨架(Next.js + TS + Vitest + Playwright + CI 脚本) | 已完成 | [#1](https://github.com/Ailian0206/yiju/pull/1) |
 | M1 | 引擎核心(状态机、意图解析、防刷规则,TDD) | 已完成 | [#2](https://github.com/Ailian0206/yiju/pull/2) |
-| M2 | 找猫模组内容(事件卡、模板、通关/失败序列测试) | 进行中 | — |
+| M2 | 找猫模组内容(事件卡、模板、通关/失败序列测试) | 已完成 | [#3](https://github.com/Ailian0206/yiju/pull/3) |
 | M3 | 界面(叙事区、状态面板、输入区、结局页) | 待开始 | — |
 | M4 | P0 收尾自测、README、状态归档 | 待开始 | — |
 | M5(P1) | 接入真实 LLM(DeepSeek),待用户确认密钥后启动 | 未启动 | — |
