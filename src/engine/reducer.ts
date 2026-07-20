@@ -35,9 +35,23 @@ function applyEffects(state: GameState, card: EventCard): GameState {
     ...state,
     clues: state.clues + (effects.clues ?? 0),
     closeness: effects.closeness ?? state.closeness,
-    currentLocationId: effects.moveToLocationId ?? state.currentLocationId,
     flags: nextFlags,
     triggeredEventIds: nextTriggeredIds,
+  };
+}
+
+/**
+ * move 意图单独处理,不查事件卡、不消耗行动次数:产品文档 §4.5 的通关步数
+ * 估算只数交互动作,"走过去"不算独立一步。P0 所有地点从一开始就能互通,
+ * 不需要内容层数据就能判断能不能走——真要做"地点解锁"是 P2 才考虑的事。
+ */
+function resolveMove(state: GameState, intent: Intent): ReduceResult {
+  if (!intent.targetId) {
+    return { nextState: state, outcome: { kind: "unknown" } };
+  }
+  return {
+    nextState: { ...state, currentLocationId: intent.targetId },
+    outcome: { kind: "moved", locationId: intent.targetId },
   };
 }
 
@@ -51,7 +65,7 @@ function resolveFinish(state: GameState): ReduceResult {
 
   return {
     nextState: { ...costed, status: evaluateOutcome(costed) },
-    outcome: { kind: "rejected" },
+    outcome: { kind: "rejected", eventId: "finish" },
   };
 }
 
@@ -66,6 +80,10 @@ export function reduce(
 
   if (intent.type === "unknown") {
     return { nextState: state, outcome: { kind: "unknown" } };
+  }
+
+  if (intent.type === "move") {
+    return resolveMove(state, intent);
   }
 
   if (intent.type === "finish") {
@@ -87,9 +105,9 @@ export function reduce(
     };
   }
 
-  const blockedByFlags = candidates.some((card) => !isFlagsMet(card, state));
+  const blockedCard = candidates.find((card) => !isFlagsMet(card, state));
   return {
     nextState: finalized,
-    outcome: { kind: blockedByFlags ? "rejected" : "noop" },
+    outcome: blockedCard ? { kind: "rejected", eventId: blockedCard.id } : { kind: "noop" },
   };
 }

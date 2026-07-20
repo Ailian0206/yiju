@@ -103,13 +103,13 @@ describe("reduce — 基本分类", () => {
     expect(result.nextState.actionsRemaining).toBe(11);
   });
 
-  it("命中事件卡但前置旗帜不满足:rejected,仍消耗行动(时间照样在走)", () => {
+  it("命中事件卡但前置旗帜不满足:rejected 带 eventId,仍消耗行动(时间照样在走)", () => {
     const state = makeState({ currentLocationId: "garage" });
     const result = reduce(state, makeIntent({ type: "search", rawText: "摸黑找找" }), [
       garageWithoutFlashlight,
     ]);
 
-    expect(result.outcome).toEqual({ kind: "rejected" });
+    expect(result.outcome).toEqual({ kind: "rejected", eventId: "garage-search-dark" });
     expect(result.nextState.actionsRemaining).toBe(11);
     expect(result.nextState.closeness).toBe("远");
   });
@@ -142,6 +142,26 @@ describe("reduce — 基本分类", () => {
 
     expect(result.outcome).toEqual({ kind: "triggered", eventId: "garage-search-dark" });
     expect(result.nextState.closeness).toBe("很近");
+  });
+});
+
+describe("reduce — move 不消耗行动", () => {
+  it("移动到目标地点,不查事件卡、不消耗行动次数", () => {
+    const state = makeState({ currentLocationId: "unit-entrance" });
+    const result = reduce(state, makeIntent({ type: "move", targetId: "greenbelt", rawText: "去绿化带" }), []);
+
+    expect(result.outcome).toEqual({ kind: "moved", locationId: "greenbelt" });
+    expect(result.nextState.currentLocationId).toBe("greenbelt");
+    expect(result.nextState.actionsRemaining).toBe(12);
+    expect(result.nextState.sky).toBe("傍晚");
+  });
+
+  it("move 意图缺少 targetId(解析器异常兜底)时视为 unknown,不消耗行动", () => {
+    const state = makeState();
+    const result = reduce(state, makeIntent({ type: "move", targetId: undefined, rawText: "去那边" }), []);
+
+    expect(result.outcome).toEqual({ kind: "unknown" });
+    expect(result.nextState).toEqual(state);
   });
 });
 
@@ -183,7 +203,7 @@ describe("reduce — finish 与终局", () => {
     const state = makeState({ closeness: "很近" });
     const result = reduce(state, makeIntent({ type: "finish", rawText: "回家" }), []);
 
-    expect(result.outcome).toEqual({ kind: "rejected" });
+    expect(result.outcome).toEqual({ kind: "rejected", eventId: "finish" });
     expect(result.nextState.status).toBe("playing");
   });
 
