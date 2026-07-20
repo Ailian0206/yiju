@@ -72,6 +72,29 @@ describe("reduce — 基本分类", () => {
     expect(result.nextState.triggeredEventIds).toContain("ask-guard");
   });
 
+  it("地点不匹配的事件卡不会跨地点触发(即使 intentType 相同)", () => {
+    // 玩家在 unit-entrance,garageWithoutFlashlight 要求 locationId === "garage"——
+    // 覆盖率工具标出的两处 guard clause(matchesIntentShape 里的
+    // locationId/targetId 判断)在此前的用例里从未真正被命中过。
+    const state = makeState({ currentLocationId: "unit-entrance" });
+    const result = reduce(state, makeIntent({ type: "search", rawText: "仔细找找" }), [
+      garageWithoutFlashlight,
+    ]);
+
+    expect(result.outcome).toEqual({ kind: "noop" });
+  });
+
+  it("目标不匹配的事件卡不会对错误角色触发(即使 intentType 相同)", () => {
+    const state = makeState();
+    const result = reduce(
+      state,
+      makeIntent({ type: "talk", targetId: "aunt", rawText: "问问陈阿姨" }),
+      [askGuardCard],
+    );
+
+    expect(result.outcome).toEqual({ kind: "noop" });
+  });
+
   it("合法意图但没有匹配的事件卡:noop,仍消耗行动", () => {
     const state = makeState();
     const result = reduce(state, makeIntent({ type: "search", rawText: "找找" }), [askGuardCard]);
@@ -162,6 +185,14 @@ describe("reduce — finish 与终局", () => {
 
     expect(result.outcome).toEqual({ kind: "rejected" });
     expect(result.nextState.status).toBe("playing");
+  });
+
+  it("最后一次行动同时满足通关条件时,判定为 won 而不是 lost(通关优先)", () => {
+    const state = makeState({ closeness: "已找到", actionsRemaining: 1 });
+    const result = reduce(state, makeIntent({ type: "finish", rawText: "带年糕回家" }), []);
+
+    expect(result.nextState.actionsRemaining).toBe(0);
+    expect(result.nextState.status).toBe("won");
   });
 
   it("行动次数耗尽后状态自动变为 lost", () => {

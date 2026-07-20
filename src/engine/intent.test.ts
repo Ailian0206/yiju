@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createKeywordIntentResolver } from "./intent";
+import { createKeywordIntentResolver, findVocabularyAmbiguities } from "./intent";
 import type { VocabularyConfig } from "./intent";
 import type { GameState } from "./types";
 
@@ -109,5 +109,25 @@ describe("createKeywordIntentResolver — 表驱动用例", () => {
 
   it("用例数量不少于 40 条,覆盖产品文档要求的口语多样性", () => {
     expect(cases.length).toBeGreaterThanOrEqual(40);
+  });
+});
+
+describe("findVocabularyAmbiguities", () => {
+  it("当前找猫测试词表没有跨类别子串歧义", () => {
+    expect(findVocabularyAmbiguities(vocabulary)).toEqual([]);
+  });
+
+  it("能检测出跨类别的子串歧义(高优先级类别会吞掉低优先级类别的词)", () => {
+    const ambiguousVocabulary: VocabularyConfig = {
+      ...vocabulary,
+      locationSynonyms: { ...vocabulary.locationSynonyms, shed: ["手"] },
+      itemSynonyms: { ...vocabulary.itemSynonyms, flashlight: ["手电"] },
+    };
+
+    const conflicts = findVocabularyAmbiguities(ambiguousVocabulary);
+
+    expect(conflicts.length).toBeGreaterThan(0);
+    expect(conflicts[0]).toContain("手");
+    expect(conflicts[0]).toContain("手电");
   });
 });

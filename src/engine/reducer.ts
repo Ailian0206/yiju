@@ -72,6 +72,9 @@ export function reduce(
     return resolveFinish(state);
   }
 
+  // 命中顺序 = eventCards 数组顺序,取第一张可用的卡。内容层(M2 起)
+  // 若同一 intentType 下有多张候选卡,更具体的卡(同时限定 locationId+targetId)
+  // 应排在更宽泛的兜底卡之前,否则宽泛卡可能抢先命中。
   const candidates = eventCards.filter((card) => matchesIntentShape(card, intent, state));
   const match = candidates.find((card) => isAvailable(card, state));
   const costed = applyActionCost(state);
