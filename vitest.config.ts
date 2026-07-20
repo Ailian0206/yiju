@@ -19,7 +19,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json-summary"],
-      include: ["src/engine/**", "src/content/**"],
+      include: ["src/engine/**", "src/content/**", "src/lib/**"],
       // 引擎/内容模块的覆盖率门禁,对应 AGENT.md 验证门禁"引擎模块覆盖率 ≥90%"。
       // M0 阶段 types.ts 是纯类型(编译期擦除),thresholds 暂不生效;
       // M1 开始有真实逻辑后这道门禁才会实际拦截覆盖率下滑。

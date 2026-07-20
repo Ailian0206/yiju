@@ -37,54 +37,54 @@ describe("createTemplatePoolNarrator", () => {
     arrivalTemplateKeys: { greenbelt: ["arrive-greenbelt-1"] },
   });
 
-  it("triggered:从该事件的模板池里选一条", () => {
-    const text = narrator.narrate({ kind: "triggered", eventId: "ask-guard" }, makeState());
+  it("triggered:从该事件的模板池里选一条", async () => {
+    const text = await narrator.narrate({ kind: "triggered", eventId: "ask-guard" }, makeState(), "问问门卫");
     expect(["老周说往绿化带去了。", "老周指了指绿化带。"]).toContain(text);
   });
 
-  it("triggered:未知 eventId(内容缺失模板)有兜底,不抛异常", () => {
-    const text = narrator.narrate({ kind: "triggered", eventId: "no-such-event" }, makeState());
+  it("triggered:未知 eventId(内容缺失模板)有兜底,不抛异常", async () => {
+    const text = await narrator.narrate({ kind: "triggered", eventId: "no-such-event" }, makeState(), "");
     expect(typeof text).toBe("string");
     expect(text.length).toBeGreaterThan(0);
   });
 
-  it("rejected:有专门模板的 eventId 用专门文案", () => {
-    const text = narrator.narrate({ kind: "rejected", eventId: "garage-search" }, makeState());
+  it("rejected:有专门模板的 eventId 用专门文案", async () => {
+    const text = await narrator.narrate({ kind: "rejected", eventId: "garage-search" }, makeState(), "");
     expect(text).toBe("太黑了,什么都看不清。");
   });
 
-  it("rejected:没有专门模板的 eventId 落到通用兜底", () => {
-    const text = narrator.narrate({ kind: "rejected", eventId: "finish" }, makeState());
+  it("rejected:没有专门模板的 eventId 落到通用兜底", async () => {
+    const text = await narrator.narrate({ kind: "rejected", eventId: "finish" }, makeState(), "");
     expect(text).toBe("现在还不是时候。");
   });
 
-  it("unknown:走通用兜底", () => {
-    const text = narrator.narrate({ kind: "unknown" }, makeState());
+  it("unknown:走通用兜底", async () => {
+    const text = await narrator.narrate({ kind: "unknown" }, makeState(), "随便说点什么");
     expect(text).toBe("你想了想,没想好。");
   });
 
-  it("noop:走通用兜底", () => {
-    const text = narrator.narrate({ kind: "noop" }, makeState());
+  it("noop:走通用兜底", async () => {
+    const text = await narrator.narrate({ kind: "noop" }, makeState(), "");
     expect(text).toBe("这里没什么特别的。");
   });
 
-  it("moved:有专门到达文案的地点用专门文案", () => {
-    const text = narrator.narrate({ kind: "moved", locationId: "greenbelt" }, makeState());
+  it("moved:有专门到达文案的地点用专门文案", async () => {
+    const text = await narrator.narrate({ kind: "moved", locationId: "greenbelt" }, makeState(), "");
     expect(text).toBe("你走进了绿化带。");
   });
 
-  it("moved:没有专门到达文案的地点有通用兜底,不抛异常", () => {
-    const text = narrator.narrate({ kind: "moved", locationId: "nowhere" }, makeState());
+  it("moved:没有专门到达文案的地点有通用兜底,不抛异常", async () => {
+    const text = await narrator.narrate({ kind: "moved", locationId: "nowhere" }, makeState(), "");
     expect(typeof text).toBe("string");
     expect(text.length).toBeGreaterThan(0);
   });
 
-  it("随机选择是均匀分布的(用固定种子式 mock 验证两条都可能选到)", () => {
+  it("随机选择是均匀分布的(用固定种子式 mock 验证两条都可能选到)", async () => {
     const spy = vi.spyOn(Math, "random");
     spy.mockReturnValueOnce(0);
-    const first = narrator.narrate({ kind: "triggered", eventId: "ask-guard" }, makeState());
+    const first = await narrator.narrate({ kind: "triggered", eventId: "ask-guard" }, makeState(), "");
     spy.mockReturnValueOnce(0.99);
-    const second = narrator.narrate({ kind: "triggered", eventId: "ask-guard" }, makeState());
+    const second = await narrator.narrate({ kind: "triggered", eventId: "ask-guard" }, makeState(), "");
     spy.mockRestore();
 
     expect(first).toBe("老周说往绿化带去了。");

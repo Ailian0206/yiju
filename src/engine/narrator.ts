@@ -1,6 +1,7 @@
 // 叙述生成:P0 模板池实现。Narrator 是 types.ts 定义的接口,P1 若换成
-// LLM 实现,签名不变——UI 只认 Narrator.narrate(outcome, state),不关心
-// 底下是模板池还是真模型。
+// LLM 实现,签名不变——UI 只认 Narrator.narrate(outcome, state, rawText),
+// 不关心底下是模板池还是真模型。这个实现本身是同步的,包一层
+// Promise.resolve 只是为了满足接口签名。
 //
 // 内容层(如 content/lost-cat/narrator-config.ts)负责把 EventCard.templateKeys
 // 之类的分散数据组装成这里要的几张扁平表,narrator 本身不认识任何具体事件。
@@ -36,7 +37,7 @@ function pickTemplate(templates: Record<string, string>, keys: readonly string[]
 }
 
 export function createTemplatePoolNarrator(config: TemplatePoolConfig): Narrator {
-  function resolve(outcome: ActionOutcome, _state: GameState): string {
+  function resolveText(outcome: ActionOutcome): string {
     switch (outcome.kind) {
       case "unknown":
         return pickTemplate(config.templates, config.fallback.unknown);
@@ -59,5 +60,8 @@ export function createTemplatePoolNarrator(config: TemplatePoolConfig): Narrator
     }
   }
 
-  return { narrate: resolve };
+  return {
+    narrate: async (outcome: ActionOutcome, _state: GameState, _rawText: string): Promise<string> =>
+      resolveText(outcome),
+  };
 }

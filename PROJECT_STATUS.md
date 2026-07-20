@@ -1,10 +1,10 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**找猫模组 P0 完成,等待用户试玩确认后再启动 P1**
+当前阶段:**P1(DeepSeek 叙述接入)真实冒烟已通过,待开 PR 合并**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
-## 里程碑(找猫模组 P0)
+## 里程碑(找猫模组)
 
 | 里程碑 | 内容 | 状态 | PR |
 | --- | --- | --- | --- |
@@ -14,7 +14,7 @@
 | M3 | 界面(叙事区、状态面板、输入区、结局页) | 已完成 | [#4](https://github.com/Ailian0206/yiju/pull/4) |
 | M4 | P0 收尾自测、README、状态归档 | 已完成 | [#5](https://github.com/Ailian0206/yiju/pull/5) |
 | 试玩反馈修复 | 新手引导(开局叙述提示 + 建议行动按钮) | 已完成 | [#6](https://github.com/Ailian0206/yiju/pull/6) |
-| M5(P1) | 接入真实 LLM(DeepSeek),待用户确认密钥后启动 | 未启动 | — |
+| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 真实冒烟已通过(需显式关闭 V4 thinking) | [#7](https://github.com/Ailian0206/yiju/pull/7) |
 
 ## P0 自测(对照产品文档 §9 成功标准)
 
@@ -30,15 +30,17 @@
 
 标准 1 的初版自测(仅靠 Claude Code 自己/Playwright 手测)过于乐观:真实用户第一次玩时反馈"没有引导,很难玩",暴露了自测没覆盖到的问题——新手不知道该打什么字,容易在错误地点/时机试出静默无效的动作。已在 PR #6 修复,详见上表。
 
-## 已知的 P0 范围内取舍(非 bug,记录以防误判)
+## 已知的范围内取舍(非 bug,记录以防误判)
 
-- `call`(呼叫)意图目前没有任何事件卡,始终落到通用兜底文案,不会像产品文档 §6 描述的那样"概率性提升亲近感"——P0 引擎是确定性纯函数,概率效果留到 P1 或后续再做,详见 `content/lost-cat/events.ts` 头部注释。
+- `call`(呼叫)意图目前没有任何事件卡,始终落到"填词区"(P0 是通用兜底文案,P1 配置了 key 后会走 LLM 生成),不会像产品文档 §6 描述的那样"概率性提升亲近感"——这是内容深度问题,不是本次 LLM 接入的范围。
 - 字体用系统中文字体栈(PingFang SC / Songti SC / Microsoft YaHei),没有用 `next/font/google` 拉 Noto Serif/Sans SC——本地网络环境下拉不动完整字重文件,详见 `feat/m3-ui` PR 说明。
+- `engine/intent.ts` 仍是纯关键词解析,没有接 LLM——产品文档 §9 标准 2(自然语言、不用背指令)已经用 40+ 用例和真实试玩验证通过,暂时没有接的必要;`development-plan.md` 里本来就把它标注为"仅当关键词命中率实测不足时才做"。
+- 每局 LLM 调用预算(默认 15 次)只在内存里,不写进 localStorage 存档——刷新页面会让预算重新计满,不是精确的"整局最多 N 次"。个人练习项目场景下影响可以忽略,真要做持久化预算需要把计数也序列化进存档。
 
 ## 外部依赖
 
-- LLM Provider:P0 不需要;P1 计划用 DeepSeek(OpenAI 兼容 API),密钥由用户提供,启动前需明确授权。
-- 部署:P0 本地运行;P1 视效果再定。
+- LLM Provider:DeepSeek(OpenAI 兼容 API),密钥经 `DEEPSEEK_API_KEY` 环境变量注入(本地放 `.env.local`,勿写入 `.env.example`),不提交到仓库。未配置时全程 mock、零成本;配置后只在"填词区"场景调用,每局上限 15 次,超限或失败静默回落模板。自动化测试全程 mock `fetch`。2026-07-20 已对 `/api/narrate` 做真实冒烟:需在请求体里显式 `thinking: { type: "disabled" }`,否则 V4-flash 默认推理会吃光 `max_tokens`,返回空 content。
+- 部署:本地运行;线上部署视效果再定。公开部署前须补服务端速率限制(安全审查 HIGH,本地可接受)。
 
 ## 备注
 

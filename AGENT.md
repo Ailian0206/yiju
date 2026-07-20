@@ -64,6 +64,10 @@ npm run test:e2e      # Playwright,端口 3219
 
 界面改动需包含 320×568、768×1024、1440×900 三档 Playwright 截图验证,确认无横向溢出、文字裁切、异常重叠。
 
-## LLM Provider(P1 起生效)
+## LLM Provider(P1,已接入 DeepSeek)
 
-`engine/intent.ts` 的 `IntentResolver` 和 `engine/narrator.ts` 的 `Narrator` 均为接口,P0 用 mock 实现。P1 若接入 DeepSeek:走 OpenAI 兼容 API,密钥经环境变量注入,绝不提交到仓库;Prompt 需约束模型"只润色叙述/辅助意图理解,不得发明线索或修改状态"——状态变更永远由规则引擎决定。
+`engine/intent.ts` 的 `IntentResolver` 仍是纯关键词实现,未接 LLM(命中率暂无问题,不需要)。
+
+`engine/narrator.ts` 的 `Narrator` 接口已支持 P1:`content/lost-cat/llm-narrator.ts` 通过 `app/api/narrate/route.ts`(唯一持有 `DEEPSEEK_API_KEY` 的地方,密钥经环境变量 `DEEPSEEK_API_KEY` 注入,绝不提交到仓库)调用 DeepSeek(OpenAI 兼容 API)。`content/lost-cat/narrator-config.ts` 的 `createLostCatNarrator` 只把"填词区"场景(unknown/noop/无专属文案的 rejected)路由给 LLM,主线内容仍用人工模板,且有每局调用上限(默认 15 次)——超限或调用失败一律静默回落模板,不报错、不阻塞。Prompt(`route.ts` 里的 `SYSTEM_PROMPT`)约束模型"只描述场景反应,不得发明线索/道具/地点,不得暗示状态变化"——状态变更永远由规则引擎决定,模型只负责最后一层文字。
+
+自动化测试(`vitest`)全程 mock `fetch`,不发起真实网络请求;真实调用只在开发环境手动配置 `DEEPSEEK_API_KEY` 后触发,属于付费 Provider 冒烟测试,按"成本与外部写入门禁"需要用户明确授权(已在启动 P1 时获得)。
