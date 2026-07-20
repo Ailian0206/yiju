@@ -1,0 +1,31 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding-top: var(--space-xs);
+}
+
+.chip {
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  color: var(--color-accent-strong);
+  background: color-mix(in oklch, var(--color-accent) 12%, var(--color-paper-raised));
+  border: 1px solid color-mix(in oklch, var(--color-accent) 35%, transparent);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-expo), transform var(--duration-fast) var(--ease-out-expo);
+}
+
+.chip:hover {
+  background: color-mix(in oklch, var(--color-accent) 22%, var(--color-paper-raised));
+}
+
+.chip:active {
+  transform: scale(0.96);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}

@@ -33,6 +33,14 @@ export const LOCATION_NAMES: Record<string, string> = {
   [LOCATIONS.LOCKERS]: "快递柜旁",
 };
 
+/**
+ * 开局叙述:日志为空时显示。不是一句干巴巴的"你想做什么",而是把第一步
+ * 自然地缝进故事里——试玩反馈发现"没有引导,很难玩",这是最低成本的
+ * 修复:用叙事本身给出第一条线索,而不是弹一个操作说明。
+ */
+export const OPENING_NARRATION =
+  "傍晚,你发现猫「年糕」不见了。天快黑了。你想起门卫老周一直在楼下,他也许看到了什么。";
+
 export function createInitialState(): GameState {
   return {
     status: "playing",
