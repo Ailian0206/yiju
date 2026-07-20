@@ -32,6 +32,26 @@ describe("callDeepSeekChat", () => {
     );
   });
 
+  // V4-flash 默认开 thinking;max_tokens 小时推理会吃光额度,content 变空。
+  // 填词旁白不需要推理链,必须显式关掉。
+  it("请求体关闭 thinking,避免推理占满 max_tokens 导致 content 为空", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(JSON.stringify({ choices: [{ message: { content: "场景反应" } }] }), {
+        status: 200,
+      }),
+    );
+
+    await callDeepSeekChat("sk-test-key", [{ role: "user", content: "hi" }]);
+
+    const init = vi.mocked(fetch).mock.calls[0]?.[1] as RequestInit;
+    const body = JSON.parse(String(init.body)) as {
+      thinking?: { type?: string };
+      max_tokens?: number;
+    };
+    expect(body.thinking).toEqual({ type: "disabled" });
+    expect(body.max_tokens).toBe(120);
+  });
+
   it("HTTP 状态非 2xx 时抛出异常", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(new Response("", { status: 401 }));
 

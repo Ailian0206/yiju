@@ -34,6 +34,9 @@ export async function callDeepSeekChat(
       messages,
       max_tokens: options.maxTokens ?? 120,
       temperature: options.temperature ?? 0.9,
+      // V4 默认开 thinking;短旁白不需要推理链,否则 max_tokens 易被
+      // reasoning 吃光,content 变空 → /api/narrate 误报 502。
+      thinking: { type: "disabled" },
     }),
   });
 
