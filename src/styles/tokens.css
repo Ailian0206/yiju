@@ -1,0 +1,49 @@
+/* 设计基调:暖调黄昏故事本。天色档位驱动真实的背景色变化——
+   "天快黑了"不是一句台词,是玩家能看见的视觉事实。
+   不跟随系统 prefers-color-scheme:游戏自己的"变暗"就是它的暗色模式,
+   不应该被操作系统的明暗偏好覆盖。 */
+:root {
+  /* 纸面与墨色 */
+  --color-paper: oklch(96% 0.02 80);
+  --color-paper-raised: oklch(99% 0.012 80);
+  --color-ink: oklch(24% 0.03 50);
+  --color-ink-muted: oklch(45% 0.03 50);
+  --color-accent: oklch(58% 0.15 45);
+  --color-accent-strong: oklch(48% 0.16 40);
+  --color-line: oklch(85% 0.03 70 / 0.6);
+
+  /* 四档天色的暮色渐变(用于 SkyVeil 交叉淡入淡出) */
+  --sky-dusk-top: oklch(80% 0.12 70);
+  --sky-dusk-bottom: oklch(70% 0.14 45);
+  --sky-evening-top: oklch(68% 0.14 45);
+  --sky-evening-bottom: oklch(45% 0.1 320);
+  --sky-twilight-top: oklch(42% 0.09 300);
+  --sky-twilight-bottom: oklch(26% 0.07 280);
+  --sky-night-top: oklch(22% 0.05 270);
+  --sky-night-bottom: oklch(12% 0.03 260);
+
+  /* 字号:展示型衬线做叙事标题,正文 UI 用无衬线。用系统中文字体而非
+     next/font/google——Noto Serif/Sans SC 的完整字重在部分网络环境下
+     字重文件拉不下来,系统字体反而更稳定,且不引入额外下载体积。 */
+  --font-display: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  --font-ui: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+
+  --text-hero: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);
+  --text-narrative: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+  --text-base: clamp(0.95rem, 0.9rem + 0.2vw, 1rem);
+  --text-small: 0.85rem;
+
+  --space-xs: 0.5rem;
+  --space-sm: 0.875rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-section: clamp(1.5rem, 1rem + 2vw, 3rem);
+
+  --radius-card: 14px;
+  --shadow-card: 0 18px 40px -20px oklch(20% 0.05 50 / 0.45);
+
+  --duration-fast: 150ms;
+  --duration-normal: 320ms;
+  --duration-sky: 900ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}

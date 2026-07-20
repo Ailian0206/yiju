@@ -1,0 +1,33 @@
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--duration-sky) var(--ease-out-expo);
+}
+
+.layer[data-active="true"] {
+  opacity: 1;
+}
+
+.dusk {
+  background: linear-gradient(180deg, var(--sky-dusk-top), var(--sky-dusk-bottom));
+}
+
+.evening {
+  background: linear-gradient(180deg, var(--sky-evening-top), var(--sky-evening-bottom));
+}
+
+.twilight {
+  background: linear-gradient(180deg, var(--sky-twilight-top), var(--sky-twilight-bottom));
+}
+
+.night {
+  background: linear-gradient(180deg, var(--sky-night-top), var(--sky-night-bottom));
+}
