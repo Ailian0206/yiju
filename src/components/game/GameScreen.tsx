@@ -12,9 +12,10 @@ import { SuggestionChips } from "./SuggestionChips";
 import styles from "./GameScreen.module.css";
 
 export function GameScreen() {
-  const { state, submit, restart } = useGameSession();
+  const { state, submit, restart, isThinking } = useGameSession();
   const isOver = state.status !== "playing";
   const suggestions = getSuggestedActions(state);
+  const inputDisabled = isOver || isThinking;
 
   return (
     <div className={styles.screen}>
@@ -25,9 +26,9 @@ export function GameScreen() {
       </header>
       <div className={styles.layout}>
         <section className={styles.narrativeColumn}>
-          <NarrativeLog log={state.log} openingText={OPENING_NARRATION} />
-          <SuggestionChips suggestions={suggestions} disabled={isOver} onPick={submit} />
-          <ActionInput disabled={isOver} onSubmit={submit} />
+          <NarrativeLog log={state.log} openingText={OPENING_NARRATION} isThinking={isThinking} />
+          <SuggestionChips suggestions={suggestions} disabled={inputDisabled} onPick={submit} />
+          <ActionInput disabled={inputDisabled} onSubmit={submit} />
         </section>
         <StatusPanel state={state} onRestart={restart} />
       </div>

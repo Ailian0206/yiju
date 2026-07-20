@@ -48,3 +48,20 @@
   color: var(--color-ink-muted);
   font-style: italic;
 }
+
+.thinking {
+  font-family: var(--font-display);
+  font-size: var(--text-narrative);
+  color: var(--color-ink-muted);
+  animation: reveal var(--duration-normal) var(--ease-out-expo) both, dots 1.2s ease-in-out infinite;
+}
+
+@keyframes dots {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}

@@ -96,7 +96,12 @@ export interface IntentResolver {
   resolve(rawText: string, state: GameState): Intent;
 }
 
-/** 叙述生成器接口:P0 用模板池实现,P1 可换 LLM 实现,签名不变。 */
+/**
+ * 叙述生成器接口。P0 模板池实现是同步的,但接口统一定义成返回 Promise——
+ * P1 的 LLM 实现天然是异步网络调用,签名从一开始就得兼容它,不然接入
+ * 真模型时又要改一遍调用方。rawText 是玩家原始输入,模板池实现不需要
+ * 但 LLM 实现需要(用来在不改变游戏状态的前提下,针对玩家的原话给反馈)。
+ */
 export interface Narrator {
-  narrate(outcome: ActionOutcome, state: GameState): string;
+  narrate(outcome: ActionOutcome, state: GameState, rawText: string): Promise<string>;
 }

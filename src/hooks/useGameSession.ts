@@ -9,8 +9,9 @@ import { reduce } from "@/engine/reducer";
 import type { GameState, LogEntry } from "@/engine/types";
 import { lostCatEvents } from "@/content/lost-cat/events";
 import { lostCatVocabulary } from "@/content/lost-cat/lexicon";
+import { createLLMNarrator } from "@/content/lost-cat/llm-narrator";
 import { createInitialState } from "@/content/lost-cat/module";
-import { lostCatNarrator } from "@/content/lost-cat/narrator-config";
+import { createLostCatNarrator } from "@/content/lost-cat/narrator-config";
 
 const STORAGE_KEY = "yiju-lost-cat-session-v1";
 
@@ -36,9 +37,20 @@ function makeLogEntry(kind: LogEntry["kind"], text: string): LogEntry {
   return { id, kind, text };
 }
 
+// narrate() 天然异步(P1 是真实网络请求),每局的 narrator 实例持有自己的
+// LLM 调用计数——放进这个工厂里,restart() 时重建一个新实例,预算跟着
+// "这一局"走,不是跟着浏览器标签页的生命周期走。
+// 已知的简化:计数只在内存里,不写进存档;刷新页面会让预算重新计满,
+// 不是精确的"整局最多 N 次",对个人练习项目影响可以忽略。
+function createSessionNarrator() {
+  return createLostCatNarrator({ llmNarrator: createLLMNarrator() });
+}
+
 export function useGameSession() {
   const [state, setState] = useState<GameState>(createInitialState);
+  const [isThinking, setIsThinking] = useState(false);
   const resolverRef = useRef(createKeywordIntentResolver(lostCatVocabulary));
+  const narratorRef = useRef(createSessionNarrator());
   // 跳过挂载后第一次触发的保存:那一次的 state 闭包永远是初始默认值
   // (即便下面的水合 effect 调用了 setState(saved),这个 effect 是靠自己
   // 的 [state] 依赖在 state 真正变化后再跑一次,不依赖"两个 effect
@@ -64,29 +76,32 @@ export function useGameSession() {
     saveState(state);
   }, [state]);
 
-  const submit = useCallback((rawText: string) => {
-    const text = rawText.trim();
-    if (!text) return;
+  const submit = useCallback(
+    async (rawText: string) => {
+      const text = rawText.trim();
+      if (!text || state.status !== "playing" || isThinking) return;
 
-    setState((prev) => {
-      if (prev.status !== "playing") return prev;
+      const intent = resolverRef.current.resolve(text, state);
+      const result = reduce(state, intent, lostCatEvents);
 
-      const intent = resolverRef.current.resolve(text, prev);
-      const result = reduce(prev, intent, lostCatEvents);
-      const narration = lostCatNarrator.narrate(result.outcome, result.nextState);
+      setIsThinking(true);
+      const narration = await narratorRef.current.narrate(result.outcome, result.nextState, text);
+      setIsThinking(false);
 
-      return {
+      setState({
         ...result.nextState,
-        log: [...prev.log, makeLogEntry("player", text), makeLogEntry("narration", narration)],
-      };
-    });
-  }, []);
+        log: [...state.log, makeLogEntry("player", text), makeLogEntry("narration", narration)],
+      });
+    },
+    [state, isThinking],
+  );
 
   const restart = useCallback(() => {
     const fresh = createInitialState();
+    narratorRef.current = createSessionNarrator();
     saveState(fresh);
     setState(fresh);
   }, []);
 
-  return { state, submit, restart };
+  return { state, submit, restart, isThinking };
 }
