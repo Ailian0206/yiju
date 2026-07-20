@@ -14,7 +14,7 @@
 | M3 | 界面(叙事区、状态面板、输入区、结局页) | 已完成 | [#4](https://github.com/Ailian0206/yiju/pull/4) |
 | M4 | P0 收尾自测、README、状态归档 | 已完成 | [#5](https://github.com/Ailian0206/yiju/pull/5) |
 | 试玩反馈修复 | 新手引导(开局叙述提示 + 建议行动按钮) | 已完成 | [#6](https://github.com/Ailian0206/yiju/pull/6) |
-| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 真实冒烟已通过(需显式关闭 V4 thinking) | 待开 |
+| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 真实冒烟已通过(需显式关闭 V4 thinking) | [#7](https://github.com/Ailian0206/yiju/pull/7) |
 
 ## P0 自测(对照产品文档 §9 成功标准)
 
