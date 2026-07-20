@@ -12,7 +12,7 @@
 | M1 | 引擎核心(状态机、意图解析、防刷规则,TDD) | 已完成 | [#2](https://github.com/Ailian0206/yiju/pull/2) |
 | M2 | 找猫模组内容(事件卡、模板、通关/失败序列测试) | 已完成 | [#3](https://github.com/Ailian0206/yiju/pull/3) |
 | M3 | 界面(叙事区、状态面板、输入区、结局页) | 已完成 | [#4](https://github.com/Ailian0206/yiju/pull/4) |
-| M4 | P0 收尾自测、README、状态归档 | 已完成 | — |
+| M4 | P0 收尾自测、README、状态归档 | 已完成 | [#5](https://github.com/Ailian0206/yiju/pull/5) |
 | M5(P1) | 接入真实 LLM(DeepSeek),待用户确认密钥后启动 | 未启动 | — |
 
 ## P0 自测(对照产品文档 §9 成功标准)
