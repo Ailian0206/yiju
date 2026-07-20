@@ -8,17 +8,53 @@
 
 ## 本地开发
 
-> 项目骨架搭建中,以下命令在 M0 完成后生效。
-
 ```bash
 npm install
 npm run dev            # http://localhost:3000
-npm run test           # Vitest 单元测试
-npm run test:e2e       # Playwright E2E(端口 3219)
+npm run lint            # ESLint
+npm run typecheck       # tsc --noEmit
+npm run test            # Vitest 单元测试
+npm run test:coverage   # 单元测试 + 覆盖率(engine/content ≥80% 门禁)
+npm run test:e2e        # Playwright E2E(端口 3219)
+npm run test:ci         # 上面全部串起来,PR 合并前的完整门禁
+npm run build            # 生产构建
 ```
+
+## 架构
+
+```text
+玩家输入(自然语言)
+      │
+      ▼
+engine/intent.ts ─ createKeywordIntentResolver(vocabulary)
+      │  Intent { type, targetId }
+      ▼
+engine/reducer.ts ─ reduce(state, intent, eventCards)
+      │  ReduceResult { nextState, outcome }
+      ▼
+engine/narrator.ts ─ createTemplatePoolNarrator(config)
+      │  叙述文本
+      ▼
+hooks/useGameSession.ts(唯一知道怎么把三者拼起来的地方)
+      │  + localStorage 存档
+      ▼
+components/game/*(GameScreen / NarrativeLog / StatusPanel / ActionInput / EndingScreen)
+```
+
+- `engine/`:纯函数,不 import React,也不 import `content/` 下任何具体模组数据。天色推进、行动扣除、胜负判定、意图解析、叙述文案挑选——这些"规则"全在这里,不交给模型自由发挥。
+- `content/lost-cat/`:找猫模组的全部数据(地点、角色、事件卡、叙述模板、词表)。换一个模组只加这一层的文件,不改 `engine/`。
+- `hooks/useGameSession.ts`:编排层,`engine/` 和 `content/` 互相都不知道对方,靠这里拼接。
+- `components/game/`:纯展示 + 交互,不含游戏规则。
 
 ## 设计原则
 
 - **模型写故事,规则改分数**:天色推进、行动扣除、胜负判定全部由规则引擎决定,不交给模型自由发挥。
 - **引擎与内容分离**:`engine/` 是纯函数,`content/lost-cat/` 是纯数据;换模组不改引擎。
-- **成本有界**:P0 全 mock、零 API 成本;P1 接入真实 LLM 后每局调用有上限,超限静默回落模板。
+- **成本有界**:P0 全 mock、零 API 成本(`engine/narrator.ts` 是模板池,不调用任何外部服务);P1 若接入真实 LLM(候选 DeepSeek,OpenAI 兼容 API),每局调用有上限,超限静默回落模板,UI 不感知。
+
+## 找猫模组玩法
+
+- **目标**:天黑前(剩余行动次数或天色到「天黑」之前)找到走丢的猫「年糕」并带它回家。
+- **怎么玩**:在输入框用自然语言描述你想做的事,比如「去绿化带」「问问门卫」「用手电照照」「带年糕回家」。系统会把它理解成移动/搜证/对话/使用/呼叫/结束六类意图之一;看不懂的输入会温和引导重来,不扣行动次数。
+- **移动免费**:切换地点不消耗行动次数,只有搜证、对话、使用、呼叫、结束这些交互动作才消耗。
+- **状态**:天色、线索、亲近感、剩余行动会实时显示;天色档位还会让整个页面背景真的变暗。
