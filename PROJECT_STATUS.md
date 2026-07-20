@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**找猫模组 P1(DeepSeek)已合并;下一步补产品文档里的 `call` 呼叫反馈,再邀请试玩**
+当前阶段:**找猫模组 P1 已合并;`call` 呼叫反馈补齐进行中(`feat/call-echo-events`)**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
 ## 里程碑(找猫模组)
@@ -32,7 +32,7 @@
 
 ## 已知的范围内取舍(非 bug,记录以防误判)
 
-- `call`(呼叫)意图目前没有任何事件卡,始终落到"填词区"(P1 会走 LLM)——与产品文档 §6「喊名字 → 亲近感可提一档」仍有差距,列为合并 M5 后的下一项内容补齐。
+- `call`(呼叫)已用确定性事件卡补齐:亲近感为「远」时首次呼喊提到「有动静」,之后走 repeat 文案(产品文档 §6 的「概率性」用确定性代替,避免引擎引入 RNG)。
 - 字体用系统中文字体栈(PingFang SC / Songti SC / Microsoft YaHei),没有用 `next/font/google` 拉 Noto Serif/Sans SC——本地网络环境下拉不动完整字重文件,详见 `feat/m3-ui` PR 说明。
 - `engine/intent.ts` 仍是纯关键词解析,没有接 LLM——产品文档 §9 标准 2(自然语言、不用背指令)已经用 40+ 用例和真实试玩验证通过,暂时没有接的必要;`development-plan.md` 里本来就把它标注为"仅当关键词命中率实测不足时才做"。
 - 每局 LLM 调用预算(默认 15 次)只在内存里,不写进 localStorage 存档——刷新页面会让预算重新计满,不是精确的"整局最多 N 次"。个人练习项目场景下影响可以忽略,真要做持久化预算需要把计数也序列化进存档。

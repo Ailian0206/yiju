@@ -143,6 +143,40 @@ describe("reduce — 基本分类", () => {
     expect(result.outcome).toEqual({ kind: "triggered", eventId: "garage-search-dark" });
     expect(result.nextState.closeness).toBe("很近");
   });
+
+  // 呼叫类事件需要按当前亲近感分档,不能无条件改写 closeness
+  // (否则「已很近」时再喊一声会被降回「有动静」)。
+  it("requiresCloseness 不匹配时不触发该卡,可落到后续 repeatable 卡", () => {
+    const callBoost: EventCard = {
+      id: "call-boost",
+      intentType: "call",
+      requiresCloseness: "远",
+      effects: { closeness: "有动静" },
+      templateKeys: ["call-boost-1"],
+    };
+    const callRepeat: EventCard = {
+      id: "call-repeat",
+      intentType: "call",
+      repeatable: true,
+      effects: {},
+      templateKeys: ["call-repeat-1"],
+    };
+
+    const far = reduce(makeState({ closeness: "远" }), makeIntent({ type: "call", rawText: "喊年糕" }), [
+      callBoost,
+      callRepeat,
+    ]);
+    expect(far.outcome).toEqual({ kind: "triggered", eventId: "call-boost" });
+    expect(far.nextState.closeness).toBe("有动静");
+
+    const near = reduce(
+      makeState({ closeness: "很近" }),
+      makeIntent({ type: "call", rawText: "喊年糕" }),
+      [callBoost, callRepeat],
+    );
+    expect(near.outcome).toEqual({ kind: "triggered", eventId: "call-repeat" });
+    expect(near.nextState.closeness).toBe("很近");
+  });
 });
 
 describe("reduce — move 不消耗行动", () => {

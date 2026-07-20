@@ -15,6 +15,7 @@ function isFlagsMet(card: EventCard, state: GameState): boolean {
 }
 
 function isAvailable(card: EventCard, state: GameState): boolean {
+  if (card.requiresCloseness && state.closeness !== card.requiresCloseness) return false;
   const alreadyTriggered = state.triggeredEventIds.includes(card.id);
   return isFlagsMet(card, state) && (!alreadyTriggered || Boolean(card.repeatable));
 }

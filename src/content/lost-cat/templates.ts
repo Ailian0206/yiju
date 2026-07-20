@@ -1,6 +1,11 @@
 // 找猫模组叙述模板池。每个 templateKey 对应一条中文叙述,narrator(M3 实现)
 // 从 EventCard.templateKeys 里随机选一条,避免同一事件反复触发时文案一模一样。
 export const lostCatTemplates: Record<string, string> = {
+  "call-distant-1": "你喊了一声「年糕——」,远处草丛里好像晃了一下,又安静下来。",
+  "call-distant-2": "「年糕!」你的声音在小区里荡开,隐约听见一声细弱的回应。",
+  "call-repeat-1": "又喊了几声,这一回没有新的动静。",
+  "call-repeat-2": "你再喊一遍,风声里仍是老样子,得换个办法找找。",
+
   "ask-guard-1": "门卫老周想了想:「傍晚是有只猫从这边窜过去,好像往绿化带那头跑了。」",
   "ask-guard-2": "老周搓着手:「刚巡逻回来,瞥见一只猫尾巴钻进了绿化带,你去那边看看?」",
   "ask-guard-repeat-1": "老周摆摆手:「我刚才都说了,好像往绿化带去了。」",

@@ -1,16 +1,29 @@
 // 找猫模组事件卡。顺序即引擎匹配顺序(见 engine/reducer.ts 头部注释)——
 // 更具体的卡排在对应的 repeatable 兜底卡之前。
 //
-// 已知延后项:产品文档 §6 提到"喊名字 → 远处似有回应,亲近感可提一档,
-// 概率性"——P0 没有实现任何 call 事件卡,call 目前永远落到 noop。
-// 这不是遗漏,是刻意延后(P0 引擎是纯函数/确定性的,概率效果要么等
-// P1 换真实 LLM,要么后续给纯函数加一个显式的伪随机种子再做,不在
-// M2 现在的范围内),content.test.ts 的必败序列测试还依赖这个 noop
-// 行为。真做的话记得同步更新那条测试。
+// 呼叫(call):产品文档 §6「喊名字 → 远处似有回应,亲近感可提一档」。
+// P0 用确定性实现代替「概率性」——仅当亲近感仍为「远」时首次呼喊提档;
+// 已更近后再喊走 repeat 卡,避免把「很近」降回去。必败序列仍可只靠呼喊耗尽行动。
 import type { EventCard } from "@/engine/types";
 import { CHARACTERS, ITEMS, LOCATIONS } from "./module";
 
 export const lostCatEvents: EventCard[] = [
+  // 早期:喊名字(任意地点)。requiresCloseness 限制只在「远」时提档一次。
+  {
+    id: "call-name-distant",
+    intentType: "call",
+    requiresCloseness: "远",
+    effects: { closeness: "有动静" },
+    templateKeys: ["call-distant-1", "call-distant-2"],
+  },
+  {
+    id: "call-name-repeat",
+    intentType: "call",
+    repeatable: true,
+    effects: {},
+    templateKeys: ["call-repeat-1", "call-repeat-2"],
+  },
+
   // 早期:问门卫,指向绿化带。门卫在楼下随时能问,不限制地点。
   {
     id: "ask-guard",
