@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**P1(DeepSeek 叙述接入)已完成开发,等待用户配置密钥做真实冒烟测试**
+当前阶段:**P1(DeepSeek 叙述接入)真实冒烟已通过,待开 PR 合并**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
 ## 里程碑(找猫模组)
@@ -14,7 +14,7 @@
 | M3 | 界面(叙事区、状态面板、输入区、结局页) | 已完成 | [#4](https://github.com/Ailian0206/yiju/pull/4) |
 | M4 | P0 收尾自测、README、状态归档 | 已完成 | [#5](https://github.com/Ailian0206/yiju/pull/5) |
 | 试玩反馈修复 | 新手引导(开局叙述提示 + 建议行动按钮) | 已完成 | [#6](https://github.com/Ailian0206/yiju/pull/6) |
-| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 开发完成,待真实冒烟测试 | 待开 |
+| M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 真实冒烟已通过(需显式关闭 V4 thinking) | 待开 |
 
 ## P0 自测(对照产品文档 §9 成功标准)
 
@@ -39,8 +39,8 @@
 
 ## 外部依赖
 
-- LLM Provider:DeepSeek(OpenAI 兼容 API),密钥经 `DEEPSEEK_API_KEY` 环境变量注入,不提交到仓库。未配置时全程 mock、零成本;配置后只在"填词区"场景调用,每局上限 15 次,超限或失败静默回落模板。自动化测试全程 mock `fetch`,真实调用需要用户在本地 `.env.local` 配置真实 key 后手动冒烟测试。
-- 部署:本地运行;线上部署视效果再定。
+- LLM Provider:DeepSeek(OpenAI 兼容 API),密钥经 `DEEPSEEK_API_KEY` 环境变量注入(本地放 `.env.local`,勿写入 `.env.example`),不提交到仓库。未配置时全程 mock、零成本;配置后只在"填词区"场景调用,每局上限 15 次,超限或失败静默回落模板。自动化测试全程 mock `fetch`。2026-07-20 已对 `/api/narrate` 做真实冒烟:需在请求体里显式 `thinking: { type: "disabled" }`,否则 V4-flash 默认推理会吃光 `max_tokens`,返回空 content。
+- 部署:本地运行;线上部署视效果再定。公开部署前须补服务端速率限制(安全审查 HIGH,本地可接受)。
 
 ## 备注
 
