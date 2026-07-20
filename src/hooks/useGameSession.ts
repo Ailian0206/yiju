@@ -84,14 +84,17 @@ export function useGameSession() {
       const intent = resolverRef.current.resolve(text, state);
       const result = reduce(state, intent, lostCatEvents);
 
+      // finally 保证 narrate 异常时也不会把输入区永久锁在 thinking
       setIsThinking(true);
-      const narration = await narratorRef.current.narrate(result.outcome, result.nextState, text);
-      setIsThinking(false);
-
-      setState({
-        ...result.nextState,
-        log: [...state.log, makeLogEntry("player", text), makeLogEntry("narration", narration)],
-      });
+      try {
+        const narration = await narratorRef.current.narrate(result.outcome, result.nextState, text);
+        setState({
+          ...result.nextState,
+          log: [...state.log, makeLogEntry("player", text), makeLogEntry("narration", narration)],
+        });
+      } finally {
+        setIsThinking(false);
+      }
     },
     [state, isThinking],
   );
