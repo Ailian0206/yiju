@@ -42,12 +42,20 @@ export interface LogEntry {
   text: string;
 }
 
-/** reducer 单次处理的结果:新状态 + 本次触发的事件 id(供 narrator 取模板)。 */
+/**
+ * 一次行动的结果:拒绝 / 触发了某个事件 / 通过但未命中任何事件卡,三选一。
+ * 用可辨识联合而非独立的 rejected+triggeredEventId,避免出现
+ * "既 rejected 又有 triggeredEventId" 这种类型层面本不该存在的状态。
+ */
+export type ActionOutcome =
+  | { kind: "rejected" }
+  | { kind: "triggered"; eventId: string }
+  | { kind: "noop" };
+
+/** reducer 单次处理的结果:新状态 + 本次行动的结果分类(供 narrator 取模板)。 */
 export interface ReduceResult {
   nextState: GameState;
-  triggeredEventId: string | null;
-  /** 本次行动是否被规则拒绝(如无手电照车库),供 narrator 生成对应文案。 */
-  rejected: boolean;
+  outcome: ActionOutcome;
 }
 
 /** 事件卡:内容层数据,引擎只按接口消费,不关心具体触发条件的业务含义。 */
@@ -79,5 +87,5 @@ export interface IntentResolver {
 
 /** 叙述生成器接口:P0 用模板池实现,P1 可换 LLM 实现,签名不变。 */
 export interface Narrator {
-  narrate(eventId: string | null, state: GameState, rejected: boolean): string;
+  narrate(outcome: ActionOutcome, state: GameState): string;
 }
