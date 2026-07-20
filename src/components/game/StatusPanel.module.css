@@ -1,0 +1,120 @@
+.panel {
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-md) var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  /* 手撕票根感的顶边,避免规整卡片的通用 SaaS 观感 */
+  clip-path: polygon(
+    0% 2%, 4% 0%, 10% 1.5%, 18% 0%, 26% 1.2%, 34% 0%, 42% 1.5%, 50% 0%,
+    58% 1.2%, 66% 0%, 74% 1.5%, 82% 0%, 90% 1.2%, 96% 0%, 100% 2%,
+    100% 100%, 0% 100%
+  );
+}
+
+.location {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-ink);
+  border-bottom: 1px dashed var(--color-line);
+  padding-bottom: var(--space-xs);
+}
+
+.stats {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.statLabel {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  letter-spacing: 0.05em;
+}
+
+.statValue {
+  font-weight: 700;
+  color: var(--color-accent-strong);
+  transition: transform var(--duration-fast) var(--ease-out-expo);
+}
+
+.statValue[data-pulse="true"] {
+  animation: pulse var(--duration-normal) var(--ease-out-expo);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.restartButton {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--color-line);
+  color: var(--color-ink-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-expo), color var(--duration-fast) var(--ease-out-expo);
+}
+
+.restartButton:hover,
+.restartButton:focus-visible {
+  background-color: var(--color-accent);
+  color: var(--color-paper-raised);
+  border-color: var(--color-accent);
+}
+
+.restartButton:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    clip-path: none;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .location {
+    border-bottom: none;
+    padding-bottom: 0;
+    font-size: 0.95rem;
+    flex: 1 1 auto;
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-sm);
+  }
+
+  .stat {
+    gap: 0.3rem;
+  }
+
+  .restartButton {
+    margin-left: auto;
+  }
+}
