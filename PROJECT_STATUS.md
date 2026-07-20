@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-20
-当前阶段:**找猫模组 P0+P1 功能闭环完成;建议本地试玩确认后,再决定是否部署上线**
+当前阶段:**找猫功能闭环;试玩反馈迭代中(滚动条样式 + 开局轻引导)**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
 
 ## 里程碑(找猫模组)

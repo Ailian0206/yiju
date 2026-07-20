@@ -65,9 +65,10 @@ test.describe("找猫 — 新手引导", () => {
     await suggestion.click();
 
     await expect(page.getByText("门卫老周想了想").or(page.getByText("老周搓着手"))).toBeVisible();
-    // 建议按钮应该跟着进度更新,而不是停留在已经做过的动作上
-    await expect(page.getByRole("button", { name: "去绿化带" })).toBeVisible();
+    // 开局提示用过一次后就收起,不能变成整条通关点击链
+    await expect(page.getByRole("group", { name: "建议的下一步" })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "问问门卫" })).not.toBeVisible();
+    await expect(page.getByRole("button", { name: "去绿化带" })).not.toBeVisible();
   });
 });
 
