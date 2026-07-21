@@ -22,8 +22,8 @@
 | 里程碑 | 内容 | 状态 | PR |
 | --- | --- | --- | --- |
 | 计划 | 主页 + 五模组路线图与确认决策 | 已完成 | [#10](https://github.com/Ailian0206/yiju/pull/10) |
-| M6 | 模组注册表、主页选关、`/modules/[id]` 介绍页、`/play/[id]` 可玩路由;未完成标「即将开发」 | 进行中(本分支) | — |
-| M7 | Dofun 封面 + `docs/art-briefs.md` | 进行中(与 M6 同批) | — |
+| M6 | 模组注册表、主页选关、`/modules/[id]` 介绍页、`/play/[id]` 可玩路由;未完成标「即将开发」 | 待合并 | [#11](https://github.com/Ailian0206/yiju/pull/11) |
+| M7 | Dofun 封面 + `docs/art-briefs.md` | 待合并(与 M6 同批) | [#11](https://github.com/Ailian0206/yiju/pull/11) |
 | M8+ | 《电梯故障》可玩内容起,按序推进 | 未开始 | — |
 
 ### P2 已确认产品决策
