@@ -18,11 +18,11 @@ describe("content/registry", () => {
     }
   });
 
-  it("找猫、电梯与相亲可玩,其余为即将开发", () => {
+  it("四个模组可玩,仅植物为即将开发", () => {
     const playable = listPlayableModules().map((m) => m.id);
-    expect(playable).toEqual(["lost-cat", "elevator", "blind-date"]);
+    expect(playable).toEqual(["lost-cat", "elevator", "blind-date", "chunyun"]);
     const preview = listModules().filter((m) => m.status === "preview");
-    expect(preview).toHaveLength(2);
+    expect(preview.map((m) => m.id)).toEqual(["plant-week"]);
   });
 
   it("getModule 能取到找猫;未知 id 返回 undefined", () => {
@@ -34,6 +34,7 @@ describe("content/registry", () => {
     expect(getModuleBundle("lost-cat")?.meta.id).toBe("lost-cat");
     expect(getModuleBundle("elevator")?.meta.id).toBe("elevator");
     expect(getModuleBundle("blind-date")?.meta.id).toBe("blind-date");
-    expect(getModuleBundle("chunyun")).toBeUndefined();
+    expect(getModuleBundle("chunyun")?.meta.id).toBe("chunyun");
+    expect(getModuleBundle("plant-week")).toBeUndefined();
   });
 });

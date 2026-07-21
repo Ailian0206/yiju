@@ -5,6 +5,7 @@ import { createElevatorBundle } from "@/content/elevator/bundle";
 import { elevatorMeta } from "@/content/elevator/meta";
 import { createBlindDateBundle } from "@/content/blind-date/bundle";
 import { blindDateMeta } from "@/content/blind-date/meta";
+import { createChunyunBundle } from "@/content/chunyun/bundle";
 import { chunyunMeta } from "@/content/chunyun/meta";
 import { plantWeekMeta } from "@/content/plant-week/meta";
 
@@ -20,6 +21,7 @@ const bundlesById: Record<string, () => ModuleBundle> = {
   "lost-cat": createLostCatBundle,
   elevator: createElevatorBundle,
   "blind-date": createBlindDateBundle,
+  chunyun: createChunyunBundle,
 };
 
 /** 主页用的完整模组列表(含即将开发)。 */

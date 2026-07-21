@@ -9,6 +9,6 @@ export const chunyunMeta: ModuleMeta = {
   howToPlay:
     "在限时夜里做选择:刷新、改签策略、联系家人、换车次。天色(或时刻)会推进,行动次数有限。在时间耗尽前抢到能回家的票即通关。",
   coverSrc: "/modules/chunyun/cover.webp",
-  status: "preview",
+  status: "playable",
   estimatedMinutes: 20,
 };

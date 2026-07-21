@@ -30,8 +30,8 @@ test.describe("主页选关", () => {
 
   test("即将开发模组进入简介页,不能开玩", async ({ page }) => {
     await page.goto("/");
-    await page.locator('a[href="/modules/chunyun"]').click();
-    await expect(page).toHaveURL(/\/modules\/chunyun/);
+    await page.locator('a[href="/modules/plant-week"]').click();
+    await expect(page).toHaveURL(/\/modules\/plant-week/);
     await expect(page.getByText("即将开发")).toBeVisible();
     await expect(page.getByRole("link", { name: "开始这一局" })).toHaveCount(0);
   });

@@ -2,6 +2,7 @@
 import { LOCATION_NAMES as lostCatLocations } from "@/content/lost-cat/module";
 import { LOCATION_NAMES as elevatorLocations } from "@/content/elevator/module";
 import { LOCATION_NAMES as blindDateLocations } from "@/content/blind-date/module";
+import { LOCATION_NAMES as chunyunLocations } from "@/content/chunyun/module";
 
 export interface NarrateModulePrompt {
   systemPrompt: string;
@@ -41,6 +42,15 @@ ${SHARED_RULES}
 ${SHARED_RULES}
 - 不要在这里直接宣布相亲成功或彻底翻车`,
     locationNames: blindDateLocations,
+  },
+  chunyun: {
+    systemPrompt: `你是中文文字冒险游戏《一局·春运抢票夜》的旁白。玩家在零点前后抢回家的火车票。
+玩家刚才的输入没有触发游戏预设的具体剧情。请用 1-2 句焦急但克制的中文,
+针对玩家的原话给一个符合抢票夜情景的反应。
+
+${SHARED_RULES}
+- 不要在这里直接宣布已经抢到票或彻底没票`,
+    locationNames: chunyunLocations,
   },
 };
 
