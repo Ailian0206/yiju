@@ -96,6 +96,7 @@ export function useGameSession(moduleId: string) {
     restart,
     isThinking,
     meta: bundle.meta,
+    ui: bundle.ui,
     openingNarration: bundle.openingNarration,
     getSuggestedActions: bundle.getSuggestedActions,
   };

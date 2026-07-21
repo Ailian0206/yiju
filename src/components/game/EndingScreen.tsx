@@ -1,26 +1,25 @@
 import type { GameState } from "@/engine/types";
+import type { ModuleUi } from "@/content/types";
 import styles from "./EndingScreen.module.css";
 
 interface EndingScreenProps {
   state: GameState;
+  ui: ModuleUi;
   onRestart: () => void;
 }
 
-/** 产品文档 §3.4:通关给重逢叙述 + 回顾;失败走温和收尾,不写惨。 */
-export function EndingScreen({ state, onRestart }: EndingScreenProps) {
+/** 通关/失败结局文案由模组 ui.ending 提供,避免所有局都写找猫。 */
+export function EndingScreen({ state, ui, onRestart }: EndingScreenProps) {
   const won = state.status === "won";
+  const ending = ui.ending;
 
   return (
     <div className={styles.overlay}>
       <div className={styles.card} role="dialog" aria-modal="true" aria-labelledby="ending-title">
         <h2 id="ending-title" className={styles.title}>
-          {won ? "重逢" : "天黑了"}
+          {won ? ending.wonTitle : ending.lostTitle}
         </h2>
-        <p className={styles.body}>
-          {won
-            ? "你抱起年糕往家走,它在怀里蹭了蹭,像是在说这一路它也不容易。"
-            : "天黑了,你在家门口放了猫粮和年糕的毯子。明天一早再找。"}
-        </p>
+        <p className={styles.body}>{won ? ending.wonBody : ending.lostBody}</p>
         <div className={styles.stats}>
           <div>
             <span className={styles.statValue}>{state.actionsTaken}</span>
@@ -28,7 +27,7 @@ export function EndingScreen({ state, onRestart }: EndingScreenProps) {
           </div>
           <div>
             <span className={styles.statValue}>{state.clues}</span>
-            <span className={styles.statLabel}>收集线索</span>
+            <span className={styles.statLabel}>{ending.cluesLabel}</span>
           </div>
         </div>
         <button type="button" className={styles.restartButton} onClick={onRestart}>

@@ -9,6 +9,6 @@ export const elevatorMeta: ModuleMeta = {
   howToPlay:
     "场景几乎只有轿厢内部。用自然语言与同梯的人交谈、检查按钮、安抚情绪或尝试自救。关注有限的时间与人际关系;达成「安全出梯」或关键人物态度目标即可通关。",
   coverSrc: "/modules/elevator/cover.webp",
-  status: "preview",
+  status: "playable",
   estimatedMinutes: 20,
 };

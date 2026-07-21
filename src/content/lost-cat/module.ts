@@ -1,6 +1,7 @@
 // 找猫模组的静态标识与开局状态。引擎(src/engine/**)不 import 本文件——
 // 依赖方向永远是 content -> engine,不能反过来。
 import type { GameState } from "@/engine/types";
+import type { ModuleUi } from "@/content/types";
 
 export const LOCATIONS = {
   UNIT_ENTRANCE: "unit-entrance",
@@ -40,6 +41,23 @@ export const LOCATION_NAMES: Record<string, string> = {
  */
 export const OPENING_NARRATION =
   "傍晚,你发现猫「年糕」不见了。天快黑了。你想起门卫老周一直在楼下,他也许看到了什么。";
+
+export const lostCatUi: ModuleUi = {
+  locationNames: LOCATION_NAMES,
+  labels: {
+    sky: "天色",
+    clues: "线索",
+    closeness: "亲近感",
+    actions: "剩余行动",
+  },
+  ending: {
+    wonTitle: "重逢",
+    wonBody: "你抱起年糕往家走,它在怀里蹭了蹭,像是在说这一路它也不容易。",
+    lostTitle: "天黑了",
+    lostBody: "天黑了,你在家门口放了猫粮和年糕的毯子。明天一早再找。",
+    cluesLabel: "收集线索",
+  },
+};
 
 export function createInitialState(): GameState {
   return {

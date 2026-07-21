@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { GameState } from "@/engine/types";
-import { LOCATION_NAMES } from "@/content/lost-cat/module";
+import type { ModuleUi } from "@/content/types";
 import styles from "./StatusPanel.module.css";
 
 const PULSE_DURATION_MS = 320;
@@ -26,39 +26,44 @@ function useChangePulse(value: string | number): boolean {
 
 interface StatusPanelProps {
   state: GameState;
+  ui: ModuleUi;
   onRestart: () => void;
 }
 
-export function StatusPanel({ state, onRestart }: StatusPanelProps) {
+export function StatusPanel({ state, ui, onRestart }: StatusPanelProps) {
+  const skyText = ui.skyDisplay?.[state.sky] ?? state.sky;
+  const closenessText = ui.closenessDisplay?.[state.closeness] ?? state.closeness;
   const cluesPulse = useChangePulse(state.clues);
-  const closenessPulse = useChangePulse(state.closeness);
+  const closenessPulse = useChangePulse(closenessText);
   const actionsPulse = useChangePulse(state.actionsRemaining);
-  const skyPulse = useChangePulse(state.sky);
+  const skyPulse = useChangePulse(skyText);
 
   return (
     <aside className={styles.panel} aria-label="当前局面状态">
-      <p className={styles.location}>{LOCATION_NAMES[state.currentLocationId] ?? state.currentLocationId}</p>
+      <p className={styles.location}>
+        {ui.locationNames[state.currentLocationId] ?? state.currentLocationId}
+      </p>
       <dl className={styles.stats}>
         <div className={styles.stat}>
-          <dt className={styles.statLabel}>天色</dt>
+          <dt className={styles.statLabel}>{ui.labels.sky}</dt>
           <dd className={styles.statValue} data-pulse={skyPulse}>
-            {state.sky}
+            {skyText}
           </dd>
         </div>
         <div className={styles.stat}>
-          <dt className={styles.statLabel}>线索</dt>
+          <dt className={styles.statLabel}>{ui.labels.clues}</dt>
           <dd className={styles.statValue} data-pulse={cluesPulse}>
             {state.clues}
           </dd>
         </div>
         <div className={styles.stat}>
-          <dt className={styles.statLabel}>亲近感</dt>
+          <dt className={styles.statLabel}>{ui.labels.closeness}</dt>
           <dd className={styles.statValue} data-pulse={closenessPulse}>
-            {state.closeness}
+            {closenessText}
           </dd>
         </div>
         <div className={styles.stat}>
-          <dt className={styles.statLabel}>剩余行动</dt>
+          <dt className={styles.statLabel}>{ui.labels.actions}</dt>
           <dd className={styles.statValue} data-pulse={actionsPulse}>
             {state.actionsRemaining}
           </dd>

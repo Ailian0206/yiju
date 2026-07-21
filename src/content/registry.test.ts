@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import { getModule, getModuleBundle, listModules, listPlayableModules } from "./registry";
 
 describe("content/registry", () => {
-  it("列出全部 5 个模组,且含找猫", () => {
+  it("列出全部 5 个模组,且含找猫与电梯", () => {
     const modules = listModules();
     expect(modules).toHaveLength(5);
-    expect(modules.map((m) => m.id)).toContain("lost-cat");
+    expect(modules.map((m) => m.id)).toEqual(
+      expect.arrayContaining(["lost-cat", "elevator", "blind-date", "chunyun", "plant-week"]),
+    );
   });
 
   it("每个模组都有故事背景与玩法介绍", () => {
@@ -16,11 +18,11 @@ describe("content/registry", () => {
     }
   });
 
-  it("目前只有找猫可玩,其余为即将开发(preview)", () => {
-    const playable = listPlayableModules();
-    expect(playable.map((m) => m.id)).toEqual(["lost-cat"]);
+  it("找猫与电梯可玩,其余为即将开发", () => {
+    const playable = listPlayableModules().map((m) => m.id);
+    expect(playable).toEqual(["lost-cat", "elevator"]);
     const preview = listModules().filter((m) => m.status === "preview");
-    expect(preview).toHaveLength(4);
+    expect(preview).toHaveLength(3);
   });
 
   it("getModule 能取到找猫;未知 id 返回 undefined", () => {
@@ -28,8 +30,9 @@ describe("content/registry", () => {
     expect(getModule("no-such-module")).toBeUndefined();
   });
 
-  it("只有可玩模组能拿到 bundle;preview 拿不到", () => {
+  it("可玩模组能拿到 bundle;preview 拿不到", () => {
     expect(getModuleBundle("lost-cat")?.meta.id).toBe("lost-cat");
-    expect(getModuleBundle("elevator")).toBeUndefined();
+    expect(getModuleBundle("elevator")?.meta.id).toBe("elevator");
+    expect(getModuleBundle("blind-date")).toBeUndefined();
   });
 });
