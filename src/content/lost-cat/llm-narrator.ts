@@ -1,5 +1,7 @@
 // 调用 /api/narrate;必须带 moduleId,服务端按模组选 prompt。
+// GitHub Pages 静态站无此路由,请求失败后混合 narrator 回落模板。
 import type { GameState, Narrator } from "@/engine/types";
+import { publicUrl } from "@/lib/base-path";
 
 function pickStateFields(state: GameState) {
   return {
@@ -13,7 +15,7 @@ function pickStateFields(state: GameState) {
 export function createLLMNarrator(moduleId: string): Narrator {
   return {
     async narrate(outcome, state, rawText) {
-      const response = await fetch("/api/narrate", {
+      const response = await fetch(publicUrl("/api/narrate"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

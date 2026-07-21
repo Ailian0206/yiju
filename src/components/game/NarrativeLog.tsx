@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { LogEntry } from "@/engine/types";
+import { publicUrl } from "@/lib/base-path";
 import styles from "./NarrativeLog.module.css";
 
 interface NarrativeLogProps {
@@ -33,7 +34,13 @@ export function NarrativeLog({
           {openingImageSrc && (
             // 静态本地插图;失败时仅留文字开场
             // eslint-disable-next-line @next/next/no-img-element
-            <img className={styles.scene} src={openingImageSrc} alt="" width={720} height={405} />
+            <img
+              className={styles.scene}
+              src={publicUrl(openingImageSrc)}
+              alt=""
+              width={720}
+              height={405}
+            />
           )}
           <p className={styles.empty}>{openingText}</p>
         </div>
@@ -47,7 +54,13 @@ export function NarrativeLog({
           <div key={entry.id} className={`${styles.entry} ${styles.narrationBlock}`}>
             {entry.imageSrc && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img className={styles.scene} src={entry.imageSrc} alt="" width={720} height={405} />
+              <img
+                className={styles.scene}
+                src={publicUrl(entry.imageSrc)}
+                alt=""
+                width={720}
+                height={405}
+              />
             )}
             <p className={styles.narration}>{entry.text}</p>
           </div>

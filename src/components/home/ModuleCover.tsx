@@ -2,6 +2,7 @@
 
 // 封面图失败时隐藏 img,露出父级渐变底图,避免破图图标。
 import { useState } from "react";
+import { publicUrl } from "@/lib/base-path";
 
 interface ModuleCoverProps {
   src: string;
@@ -17,7 +18,7 @@ export function ModuleCover({ src, className, width = 640, height = 400 }: Modul
     // eslint-disable-next-line @next/next/no-img-element
     <img
       className={className}
-      src={src}
+      src={publicUrl(src)}
       alt=""
       width={width}
       height={height}

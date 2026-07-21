@@ -19,6 +19,8 @@
 # next.js
 /.next/
 /out/
+# build:pages 临时挪走的 API 目录(异常中断时可能残留)
+/.api-stash/
 
 # production
 /build

@@ -31,6 +31,7 @@
 | M11 | 引擎日/阶段 + 《照顾植物一周》 | 已完成 | [#16](https://github.com/Ailian0206/yiju/pull/16) |
 | M12 | 局内插图 + 全程下一步引导 | 已完成 | [#17](https://github.com/Ailian0206/yiju/pull/17) |
 | 引导收紧 | 建议芯片改为开局/卡住才出现,避免点提示一路通关 | 已完成 | main |
+| Pages | 静态导出 + GitHub Pages 公开访问(模板叙述,无线上 LLM) | 进行中 | — |
 
 ### P2 已确认产品决策
 
@@ -64,7 +65,7 @@
 
 - LLM Provider:DeepSeek(OpenAI 兼容 API),密钥经 `DEEPSEEK_API_KEY` 环境变量注入(本地放 `.env.local`,勿写入 `.env.example`),不提交到仓库。未配置时全程 mock、零成本;配置后只在"填词区"场景调用,每局上限 15 次,超限或失败静默回落模板。自动化测试全程 mock `fetch`。2026-07-20 已对 `/api/narrate` 做真实冒烟:需在请求体里显式 `thinking: { type: "disabled" }`,否则 V4-flash 默认推理会吃光 `max_tokens`,返回空 content。
 - 封面生图:Dofun `gpt-image-2`(见 `docs/art-briefs.md`),产物为本地静态资源。
-- 部署:本地运行;线上部署视效果再定。公开部署前须补服务端速率限制(安全审查 HIGH,本地可接受)。
+- 部署:GitHub Pages 静态站 https://ailian0206.github.io/yiju/(模板叙述,无线上 LLM)。本地 `npm run dev` 仍可接 DeepSeek。若以后把 `/api/narrate` 单独挂到有服务端的环境,公开前须补速率限制(安全审查 HIGH)。
 
 ## 备注
 
