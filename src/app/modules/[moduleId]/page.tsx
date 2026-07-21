@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getModule } from "@/content/registry";
+import { getModule, listModules } from "@/content/registry";
 import { ModuleCover } from "@/components/home/ModuleCover";
 import styles from "./ModuleIntro.module.css";
 
 interface ModuleIntroPageProps {
   params: Promise<{ moduleId: string }>;
+}
+
+export function generateStaticParams() {
+  return listModules().map((meta) => ({ moduleId: meta.id }));
 }
 
 export default async function ModuleIntroPage({ params }: ModuleIntroPageProps) {

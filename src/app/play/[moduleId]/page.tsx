@@ -1,9 +1,13 @@
 import { notFound } from "next/navigation";
 import { GameScreen } from "@/components/game/GameScreen";
-import { getModule, getModuleBundle } from "@/content/registry";
+import { getModule, getModuleBundle, listPlayableModules } from "@/content/registry";
 
 interface PlayPageProps {
   params: Promise<{ moduleId: string }>;
+}
+
+export function generateStaticParams() {
+  return listPlayableModules().map((meta) => ({ moduleId: meta.id }));
 }
 
 export default async function PlayPage({ params }: PlayPageProps) {

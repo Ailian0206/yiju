@@ -5,6 +5,7 @@
 - 产品文档:[`docs/product-plan.md`](docs/product-plan.md)
 - 开发计划:[`docs/development-plan.md`](docs/development-plan.md)
 - 当前进度:[`PROJECT_STATUS.md`](PROJECT_STATUS.md)
+- 在线试玩:[https://ailian0206.github.io/yiju/](https://ailian0206.github.io/yiju/)(GitHub Pages 静态站;**无真实 LLM**,填词区回落模板)
 
 ## 本地开发
 
@@ -17,8 +18,13 @@ npm run test            # Vitest 单元测试
 npm run test:coverage   # 单元测试 + 覆盖率(engine/content ≥80% 门禁)
 npm run test:e2e        # Playwright E2E(端口 3219)
 npm run test:ci         # 上面全部串起来,PR 合并前的完整门禁
-npm run build            # 生产构建
+npm run build            # 生产构建(含 /api/narrate,可用 next start)
+npm run build:pages      # GitHub Pages 静态导出 → out/(不含 API)
 ```
+
+## 部署(GitHub Pages)
+
+公开仓库推送到 `main` 后由 [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) 自动发布静态站。Pages **没有** Node 服务端,因此线上不会调用 DeepSeek;本地配置 `DEEPSEEK_API_KEY` 后 `npm run dev` 仍可走 `/api/narrate`。
 
 ## 架构
 
