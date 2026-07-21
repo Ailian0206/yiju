@@ -5,6 +5,7 @@ import { chunyunVocabulary } from "./lexicon";
 import { chunyunMeta } from "./meta";
 import { createInitialState, chunyunUi, OPENING_NARRATION } from "./module";
 import { createChunyunNarrator } from "./narrator-config";
+import { chunyunSceneArt } from "./scene-art";
 import { getSuggestedActions } from "./suggestions";
 
 export function createChunyunBundle(): ModuleBundle {
@@ -16,6 +17,7 @@ export function createChunyunBundle(): ModuleBundle {
     openingNarration: OPENING_NARRATION,
     getSuggestedActions,
     ui: chunyunUi,
+    sceneArt: chunyunSceneArt,
     createNarrator(options) {
       return createChunyunNarrator({
         llmNarrator: options?.llmNarrator ?? createLLMNarrator("chunyun"),

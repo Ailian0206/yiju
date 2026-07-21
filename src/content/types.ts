@@ -42,6 +42,13 @@ export interface ModuleUi {
   };
 }
 
+/** 叙事区插图资源:开局/事件/到达地点。 */
+export interface ModuleSceneArt {
+  opening?: string;
+  byEventId?: Record<string, string>;
+  byLocationId?: Record<string, string>;
+}
+
 /** 一套可装配进 useGameSession 的完整模组。 */
 export interface ModuleBundle {
   meta: ModuleMeta;
@@ -52,4 +59,6 @@ export interface ModuleBundle {
   openingNarration: string;
   getSuggestedActions: (state: GameState) => string[];
   ui: ModuleUi;
+  /** 局内插图;缺省则纯文字。 */
+  sceneArt?: ModuleSceneArt;
 }

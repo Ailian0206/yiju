@@ -16,6 +16,7 @@ export function SuggestionChips({ suggestions, disabled, onPick }: SuggestionChi
 
   return (
     <div className={styles.chips} role="group" aria-label="建议的下一步">
+      <p className={styles.hint}>下一步可以试试</p>
       {suggestions.map((text) => (
         <button
           key={text}

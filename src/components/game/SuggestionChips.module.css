@@ -1,8 +1,17 @@
 .chips {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-xs);
   padding-top: var(--space-xs);
+}
+
+.hint {
+  flex-basis: 100%;
+  margin: 0 0 0.15rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
 }
 
 .chip {

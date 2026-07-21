@@ -5,6 +5,7 @@ import { elevatorVocabulary } from "./lexicon";
 import { elevatorMeta } from "./meta";
 import { createInitialState, elevatorUi, OPENING_NARRATION } from "./module";
 import { createElevatorNarrator } from "./narrator-config";
+import { elevatorSceneArt } from "./scene-art";
 import { getSuggestedActions } from "./suggestions";
 
 export function createElevatorBundle(): ModuleBundle {
@@ -16,6 +17,7 @@ export function createElevatorBundle(): ModuleBundle {
     openingNarration: OPENING_NARRATION,
     getSuggestedActions,
     ui: elevatorUi,
+    sceneArt: elevatorSceneArt,
     createNarrator(options) {
       return createElevatorNarrator({
         llmNarrator: options?.llmNarrator ?? createLLMNarrator("elevator"),

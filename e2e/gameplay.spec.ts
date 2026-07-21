@@ -71,9 +71,9 @@ test.describe("找猫 — 新手引导", () => {
     await suggestion.click();
 
     await expect(page.getByText("门卫老周想了想").or(page.getByText("老周搓着手"))).toBeVisible();
-    await expect(page.getByRole("group", { name: "建议的下一步" })).toHaveCount(0);
+    // 全程引导:问完门卫后换成下一步「去绿化带」
+    await expect(page.getByRole("button", { name: "去绿化带" })).toBeVisible();
     await expect(page.getByRole("button", { name: "问问门卫" })).not.toBeVisible();
-    await expect(page.getByRole("button", { name: "去绿化带" })).not.toBeVisible();
   });
 });
 

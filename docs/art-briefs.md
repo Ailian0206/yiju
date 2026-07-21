@@ -11,3 +11,15 @@
 | blind-date | public/modules/blind-date/cover.webp | 1536x1024 | 中式餐厅相亲饭局,暖灯与略显尴尬的桌面 |
 | chunyun | public/modules/chunyun/cover.webp | 1536x1024 | 春运夜晚手机抢票界面氛围(不要可读文字),窗外灯火 |
 | plant-week | public/modules/plant-week/cover.webp | 1536x1024 | 阳台绿植与日历/日照,温馨居家一周照顾感 |
+
+## 局内插图(M12)
+
+路径约定:`public/modules/{id}/scenes/*.webp`。开场可用封面复用;`byEventId` 挂关键推进节点。
+
+| 模组 | 关键场景文件 |
+| --- | --- |
+| lost-cat | opening / guard / greenbelt / garage / found |
+| elevator | opening / alarm / rescue |
+| blind-date | opening / toast |
+| chunyun | opening / refresh / ticket |
+| plant-week | opening / water / sun / healthy |
