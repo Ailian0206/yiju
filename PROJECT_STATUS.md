@@ -29,7 +29,7 @@
 | M9 | 《相亲局翻车》完整可玩 | 已完成 | [#14](https://github.com/Ailian0206/yiju/pull/14) |
 | M10 | 《春运抢票夜》完整可玩 | 已完成 | [#15](https://github.com/Ailian0206/yiju/pull/15) |
 | M11 | 引擎日/阶段 + 《照顾植物一周》 | 已完成 | [#16](https://github.com/Ailian0206/yiju/pull/16) |
-| M12 | 局内插图 + 全程下一步引导 | 已完成 | — |
+| M12 | 局内插图 + 全程下一步引导 | 已完成 | [#17](https://github.com/Ailian0206/yiju/pull/17) |
 
 ### P2 已确认产品决策
 
