@@ -31,7 +31,7 @@
 | M11 | 引擎日/阶段 + 《照顾植物一周》 | 已完成 | [#16](https://github.com/Ailian0206/yiju/pull/16) |
 | M12 | 局内插图 + 全程下一步引导 | 已完成 | [#17](https://github.com/Ailian0206/yiju/pull/17) |
 | 引导收紧 | 建议芯片改为开局/卡住才出现,避免点提示一路通关 | 已完成 | main |
-| Pages | 静态导出 + GitHub Pages 公开访问(模板叙述,无线上 LLM) | 进行中 | — |
+| Pages | 静态导出 + GitHub Pages 公开访问(模板叙述,无线上 LLM) | 已完成 | [#18](https://github.com/Ailian0206/yiju/pull/18) |
 
 ### P2 已确认产品决策
 
