@@ -80,3 +80,31 @@ describe("evaluateOutcome", () => {
     expect(evaluateOutcome(wonState)).toBe("won");
   });
 });
+
+describe("日制 day/phase", () => {
+  it("启用 day 后,行动推进 早→晚→次日早,不改天色", () => {
+    const morning = makeState({ day: 1, phase: "早", sky: "傍晚", actionsTaken: 0 });
+    const evening = applyActionCost(morning);
+    expect(evening).toMatchObject({ day: 1, phase: "晚", sky: "傍晚", actionsTaken: 1 });
+
+    const nextMorning = applyActionCost(evening);
+    expect(nextMorning).toMatchObject({ day: 2, phase: "早", sky: "傍晚", actionsTaken: 2 });
+  });
+
+  it("日制超过第 7 天判定失败,且不因 sky 天黑以外的天色失败", () => {
+    expect(
+      evaluateOutcome(makeState({ day: 7, phase: "晚", sky: "傍晚", actionsRemaining: 5 })),
+    ).toBe("playing");
+    expect(
+      evaluateOutcome(makeState({ day: 8, phase: "早", sky: "傍晚", actionsRemaining: 5 })),
+    ).toBe("lost");
+  });
+
+  it("日制下植物死亡旗帜直接失败", () => {
+    expect(
+      evaluateOutcome(
+        makeState({ day: 3, phase: "早", sky: "傍晚", flags: { plant_dead: true } }),
+      ),
+    ).toBe("lost");
+  });
+});

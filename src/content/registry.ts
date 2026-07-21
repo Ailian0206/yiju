@@ -7,6 +7,7 @@ import { createBlindDateBundle } from "@/content/blind-date/bundle";
 import { blindDateMeta } from "@/content/blind-date/meta";
 import { createChunyunBundle } from "@/content/chunyun/bundle";
 import { chunyunMeta } from "@/content/chunyun/meta";
+import { createPlantWeekBundle } from "@/content/plant-week/bundle";
 import { plantWeekMeta } from "@/content/plant-week/meta";
 
 const ALL_META: ModuleMeta[] = [
@@ -22,6 +23,7 @@ const bundlesById: Record<string, () => ModuleBundle> = {
   elevator: createElevatorBundle,
   "blind-date": createBlindDateBundle,
   chunyun: createChunyunBundle,
+  "plant-week": createPlantWeekBundle,
 };
 
 /** 主页用的完整模组列表(含即将开发)。 */
