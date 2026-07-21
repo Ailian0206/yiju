@@ -9,6 +9,6 @@ export const blindDateMeta: ModuleMeta = {
   howToPlay:
     "以对话为主。输入你想说的话或想做的小动作(敬酒、转移话题、找借口离席)。留意对方好感与场面尴尬值;撑完这顿饭并达成你想要的结局即可。",
   coverSrc: "/modules/blind-date/cover.webp",
-  status: "preview",
+  status: "playable",
   estimatedMinutes: 25,
 };

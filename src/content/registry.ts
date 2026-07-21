@@ -3,6 +3,7 @@ import { createLostCatBundle } from "@/content/lost-cat/bundle";
 import { lostCatMeta } from "@/content/lost-cat/meta";
 import { createElevatorBundle } from "@/content/elevator/bundle";
 import { elevatorMeta } from "@/content/elevator/meta";
+import { createBlindDateBundle } from "@/content/blind-date/bundle";
 import { blindDateMeta } from "@/content/blind-date/meta";
 import { chunyunMeta } from "@/content/chunyun/meta";
 import { plantWeekMeta } from "@/content/plant-week/meta";
@@ -18,6 +19,7 @@ const ALL_META: ModuleMeta[] = [
 const bundlesById: Record<string, () => ModuleBundle> = {
   "lost-cat": createLostCatBundle,
   elevator: createElevatorBundle,
+  "blind-date": createBlindDateBundle,
 };
 
 /** 主页用的完整模组列表(含即将开发)。 */
