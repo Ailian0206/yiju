@@ -11,7 +11,7 @@ function playerLog(text: string): LogEntry {
   return { id: `p-${text}`, kind: "player", text };
 }
 
-describe("getSuggestedActions — 全程下一步引导", () => {
+describe("getSuggestedActions — 候选下一步(展示由 policy 门控)", () => {
   it("开局建议问门卫", () => {
     expect(getSuggestedActions(makeState())).toEqual(["问问门卫"]);
   });

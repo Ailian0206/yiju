@@ -71,9 +71,16 @@ test.describe("找猫 — 新手引导", () => {
     await suggestion.click();
 
     await expect(page.getByText("门卫老周想了想").or(page.getByText("老周搓着手"))).toBeVisible();
-    // 全程引导:问完门卫后换成下一步「去绿化带」
-    await expect(page.getByRole("button", { name: "去绿化带" })).toBeVisible();
+    // 成功推进后收起芯片,避免一路点提示通关
     await expect(page.getByRole("button", { name: "问问门卫" })).not.toBeVisible();
+    await expect(page.getByRole("button", { name: "去绿化带" })).not.toBeVisible();
+
+    // 卡住(无法解析)时再给出上下文下一步;unknown 可能走 LLM,先等输入恢复
+    await submitAction(page, "今天天气不错");
+    await expect(page.getByRole("textbox", { name: "输入你想做的事" })).toBeEnabled({
+      timeout: 30_000,
+    });
+    await expect(page.getByRole("button", { name: "去绿化带" })).toBeVisible();
   });
 });
 

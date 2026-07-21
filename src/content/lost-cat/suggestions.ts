@@ -1,4 +1,4 @@
-// 全程给「当前最合理的下一步」提示(最多 2 条),加快通关,仍允许自由输入岔开。
+// 候选「下一步」文案;是否展示由 suggestion-policy 门控(开局 / 卡住才给)。
 import type { GameState } from "@/engine/types";
 import { LOCATIONS } from "./module";
 
