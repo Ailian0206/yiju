@@ -20,6 +20,24 @@
   gap: var(--space-sm);
 }
 
+.headingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.backLink {
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  color: var(--color-accent-strong);
+  width: fit-content;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
 .title {
   font-family: var(--font-display);
   font-size: var(--text-hero);
