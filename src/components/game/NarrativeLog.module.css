@@ -5,28 +5,14 @@
   flex-direction: column;
   gap: var(--space-sm);
   padding: var(--space-md) 0;
-  /* 给细滚动条留一点右边距,避免文字贴轨 */
-  padding-right: 0.35rem;
   scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklch, var(--color-accent) 45%, transparent) transparent;
+  /* 隐藏滚动条,仍可用滚轮/触控板滚动 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .log::-webkit-scrollbar {
-  width: 6px;
-}
-
-.log::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.log::-webkit-scrollbar-thumb {
-  background: color-mix(in oklch, var(--color-accent) 40%, var(--color-line));
-  border-radius: 999px;
-}
-
-.log::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklch, var(--color-accent-strong) 55%, var(--color-line));
+  display: none;
 }
 
 .entry {
