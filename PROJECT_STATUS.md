@@ -28,7 +28,7 @@
 | M8 | 《电梯故障 60 分钟》完整可玩 + 模组 UI 文案槽 | 已完成 | [#13](https://github.com/Ailian0206/yiju/pull/13) |
 | M9 | 《相亲局翻车》完整可玩 | 已完成 | [#14](https://github.com/Ailian0206/yiju/pull/14) |
 | M10 | 《春运抢票夜》完整可玩 | 已完成 | [#15](https://github.com/Ailian0206/yiju/pull/15) |
-| M11 | 引擎日/阶段 + 《照顾植物一周》 | 进行中 | — |
+| M11 | 引擎日/阶段 + 《照顾植物一周》 | 已完成 | [#16](https://github.com/Ailian0206/yiju/pull/16) |
 
 ### P2 已确认产品决策
 
