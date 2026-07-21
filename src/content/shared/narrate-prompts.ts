@@ -1,6 +1,7 @@
 // narrate API 按模组取 system prompt 与地点名——避免电梯局里串成找猫。
 import { LOCATION_NAMES as lostCatLocations } from "@/content/lost-cat/module";
 import { LOCATION_NAMES as elevatorLocations } from "@/content/elevator/module";
+import { LOCATION_NAMES as blindDateLocations } from "@/content/blind-date/module";
 
 export interface NarrateModulePrompt {
   systemPrompt: string;
@@ -31,6 +32,15 @@ ${SHARED_RULES}
 ${SHARED_RULES}
 - 不要让电梯门在这里打开,也不要宣告救援已经完成`,
     locationNames: elevatorLocations,
+  },
+  "blind-date": {
+    systemPrompt: `你是中文文字冒险游戏《一局·相亲局翻车》的旁白。玩家在中式餐厅相亲饭局上周旋。
+玩家刚才的输入没有触发游戏预设的具体剧情。请用 1-2 句带点社死紧张感但不刻薄的中文,
+针对玩家的原话给一个符合饭局情景的反应。
+
+${SHARED_RULES}
+- 不要在这里直接宣布相亲成功或彻底翻车`,
+    locationNames: blindDateLocations,
   },
 };
 
