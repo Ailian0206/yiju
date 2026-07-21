@@ -18,6 +18,7 @@ function makeRequest(body: unknown): Request {
 }
 
 const validBody = {
+  moduleId: "lost-cat",
   outcome: { kind: "unknown" },
   state: { currentLocationId: "unit-entrance", sky: "傍晚", clues: 0, closeness: "远" },
   rawText: "这是一句系统听不懂的话",
@@ -74,10 +75,44 @@ describe("POST /api/narrate", () => {
     expect(callDeepSeekChatMock).toHaveBeenCalledWith(
       "sk-test",
       expect.arrayContaining([
-        expect.objectContaining({ role: "system" }),
+        expect.objectContaining({
+          role: "system",
+          content: expect.stringContaining("找回走丢的猫"),
+        }),
         expect.objectContaining({ role: "user", content: expect.stringContaining("这是一句系统听不懂的话") }),
       ]),
     );
+  });
+
+  it("电梯 moduleId 使用电梯专属 system prompt 与地点名", async () => {
+    vi.stubEnv("DEEPSEEK_API_KEY", "sk-test");
+    callDeepSeekChatMock.mockResolvedValueOnce("轿厢里一阵沉默。");
+
+    const response = await POST(
+      makeRequest({
+        ...validBody,
+        moduleId: "elevator",
+        state: { currentLocationId: "cabin", sky: "傍晚", clues: 0, closeness: "远" },
+        rawText: "随便敲敲墙",
+      }),
+    );
+    const data = (await response.json()) as { text?: string };
+
+    expect(response.status).toBe(200);
+    expect(data.text).toBe("轿厢里一阵沉默。");
+    const [, messages] = callDeepSeekChatMock.mock.calls[0] as [string, { role: string; content: string }[]];
+    expect(messages[0].content).toContain("电梯故障");
+    expect(messages[1].content).toContain("电梯轿厢");
+    expect(messages[0].content).not.toContain("年糕");
+  });
+
+  it("未知 moduleId 返回 400", async () => {
+    vi.stubEnv("DEEPSEEK_API_KEY", "sk-test");
+
+    const response = await POST(makeRequest({ ...validBody, moduleId: "no-such" }));
+
+    expect(response.status).toBe(400);
+    expect(callDeepSeekChatMock).not.toHaveBeenCalled();
   });
 
   it("DeepSeek 调用失败时返回 502 并带上错误信息,不抛未捕获异常", async () => {

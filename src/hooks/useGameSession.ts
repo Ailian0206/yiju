@@ -48,7 +48,7 @@ export function useGameSession(moduleId: string) {
   });
   const [isThinking, setIsThinking] = useState(false);
   const resolverRef = useRef(createKeywordIntentResolver(bundle.vocabulary));
-  const narratorRef = useRef(bundle.createNarrator({ llmNarrator: createLLMNarrator() }));
+  const narratorRef = useRef(bundle.createNarrator({ llmNarrator: createLLMNarrator(moduleId) }));
   const eventsRef = useRef(bundle.events);
   // 挂载首帧跳过保存,防止默认态盖住刚读出的存档
   const skipNextSaveRef = useRef(true);
@@ -85,7 +85,7 @@ export function useGameSession(moduleId: string) {
 
   const restart = useCallback(() => {
     const fresh = bundle.createInitialState();
-    narratorRef.current = bundle.createNarrator({ llmNarrator: createLLMNarrator() });
+    narratorRef.current = bundle.createNarrator({ llmNarrator: createLLMNarrator(moduleId) });
     saveState(moduleId, fresh);
     setState(fresh);
   }, [bundle, moduleId]);
@@ -96,6 +96,7 @@ export function useGameSession(moduleId: string) {
     restart,
     isThinking,
     meta: bundle.meta,
+    ui: bundle.ui,
     openingNarration: bundle.openingNarration,
     getSuggestedActions: bundle.getSuggestedActions,
   };

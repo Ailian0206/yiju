@@ -20,7 +20,7 @@ export function GameScreen({ moduleId }: GameScreenProps) {
 }
 
 function GameScreenInner({ moduleId }: GameScreenProps) {
-  const { state, submit, restart, isThinking, meta, openingNarration, getSuggestedActions } =
+  const { state, submit, restart, isThinking, meta, openingNarration, getSuggestedActions, ui } =
     useGameSession(moduleId);
   const isOver = state.status !== "playing";
   const suggestions = getSuggestedActions(state);
@@ -44,9 +44,9 @@ function GameScreenInner({ moduleId }: GameScreenProps) {
           <SuggestionChips suggestions={suggestions} disabled={inputDisabled} onPick={submit} />
           <ActionInput disabled={inputDisabled} onSubmit={submit} />
         </section>
-        <StatusPanel state={state} onRestart={restart} />
+        <StatusPanel state={state} ui={ui} onRestart={restart} />
       </div>
-      {isOver && <EndingScreen state={state} onRestart={restart} />}
+      {isOver && <EndingScreen state={state} ui={ui} onRestart={restart} />}
     </div>
   );
 }

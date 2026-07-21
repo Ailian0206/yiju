@@ -1,6 +1,4 @@
-// 调用 /api/narrate,由服务端持有密钥并真正调用 DeepSeek。任何失败都
-// 直接 throw——narrator-config.ts 的 createLostCatNarrator 统一接住、
-// 静默回落模板,这里不用自己处理降级逻辑。
+// 调用 /api/narrate;必须带 moduleId,服务端按模组选 prompt。
 import type { GameState, Narrator } from "@/engine/types";
 
 function pickStateFields(state: GameState) {
@@ -12,13 +10,18 @@ function pickStateFields(state: GameState) {
   };
 }
 
-export function createLLMNarrator(): Narrator {
+export function createLLMNarrator(moduleId: string): Narrator {
   return {
     async narrate(outcome, state, rawText) {
       const response = await fetch("/api/narrate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ outcome, state: pickStateFields(state), rawText }),
+        body: JSON.stringify({
+          moduleId,
+          outcome,
+          state: pickStateFields(state),
+          rawText,
+        }),
       });
 
       if (!response.ok) {

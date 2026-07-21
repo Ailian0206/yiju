@@ -1,4 +1,4 @@
-import type { EventCard, GameState, Narrator } from "@/engine/types";
+import type { Closeness, EventCard, GameState, Narrator, SkyPhase } from "@/engine/types";
 import type { VocabularyConfig } from "@/engine/intent";
 
 /** 主页展示与路由用的模组元数据;不含玩法数据。 */
@@ -22,6 +22,26 @@ export interface ModuleNarratorOptions {
   maxCallsPerSession?: number;
 }
 
+/** 状态面板/结局文案:引擎四槽复用,展示语义由模组覆盖。 */
+export interface ModuleUi {
+  locationNames: Record<string, string>;
+  labels: {
+    sky: string;
+    clues: string;
+    closeness: string;
+    actions: string;
+  };
+  skyDisplay?: Partial<Record<SkyPhase, string>>;
+  closenessDisplay?: Partial<Record<Closeness, string>>;
+  ending: {
+    wonTitle: string;
+    wonBody: string;
+    lostTitle: string;
+    lostBody: string;
+    cluesLabel: string;
+  };
+}
+
 /** 一套可装配进 useGameSession 的完整模组。 */
 export interface ModuleBundle {
   meta: ModuleMeta;
@@ -31,4 +51,5 @@ export interface ModuleBundle {
   createNarrator: (options?: ModuleNarratorOptions) => Narrator;
   openingNarration: string;
   getSuggestedActions: (state: GameState) => string[];
+  ui: ModuleUi;
 }
