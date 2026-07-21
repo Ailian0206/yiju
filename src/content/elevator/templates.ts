@@ -17,6 +17,7 @@ export const elevatorTemplates: Record<string, string> = {
 
   "check-panel-1": "你顺着白领说的位置掰开侧盖,露出蒙尘的对讲面板。大家凑过来一起看。",
   "check-panel-2": "应急盖板卡扣一松,里面的对讲键还在。轿厢里第一次有了明确的下一步。",
+  "check-panel-repeat-1": "面板已经打开了,该看的都看过。接下来得用对讲求助。",
   "check-panel-too-early-1": "你四处摸索按钮和缝隙,但乱按一通也找不到真正能用的面板——也许得先让报警系统醒过来。",
 
   "use-intercom-1": "对讲接通了。外面传来物业的声音:「收到,别乱动,我们马上到。」门缝里透进一点光。",

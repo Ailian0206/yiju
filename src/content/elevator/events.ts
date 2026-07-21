@@ -80,12 +80,20 @@ export const elevatorEvents: EventCard[] = [
     effects: { clues: 1, closeness: "很近", setFlags: ["panel_checked"] },
     templateKeys: ["check-panel-1", "check-panel-2"],
   },
+  // 面板已打开后的重复搜索:必须排在「太早」兜底卡之前
   {
-    id: "check-panel-rejected",
+    id: "check-panel-repeat",
     intentType: "search",
     locationId: LOCATIONS.CABIN,
-    // 无报警时搜证走 noop/另一卡——用无 requiresFlags 的 repeatable 会先匹配?
-    // 引擎按顺序匹配:check-panel 需要 alarm_on,不满足则跳过;下面这张无 flag 要求会命中。
+    requiresFlags: ["panel_checked"],
+    repeatable: true,
+    effects: {},
+    templateKeys: ["check-panel-repeat-1"],
+  },
+  {
+    id: "check-panel-too-early",
+    intentType: "search",
+    locationId: LOCATIONS.CABIN,
     effects: {},
     repeatable: true,
     templateKeys: ["check-panel-too-early-1"],

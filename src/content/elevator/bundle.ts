@@ -18,7 +18,7 @@ export function createElevatorBundle(): ModuleBundle {
     ui: elevatorUi,
     createNarrator(options) {
       return createElevatorNarrator({
-        llmNarrator: options?.llmNarrator ?? createLLMNarrator(),
+        llmNarrator: options?.llmNarrator ?? createLLMNarrator("elevator"),
         maxCallsPerSession: options?.maxCallsPerSession,
       });
     },

@@ -18,7 +18,7 @@ export function createLostCatBundle(): ModuleBundle {
     ui: lostCatUi,
     createNarrator(options) {
       return createLostCatNarrator({
-        llmNarrator: options?.llmNarrator ?? createLLMNarrator(),
+        llmNarrator: options?.llmNarrator ?? createLLMNarrator("lost-cat"),
         maxCallsPerSession: options?.maxCallsPerSession,
       });
     },

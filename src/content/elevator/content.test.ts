@@ -58,4 +58,12 @@ describe("elevator 通关与失败", () => {
     const state = playSession(Array(9).fill("大声喊救命"));
     expect(state.status).toBe("lost");
   });
+
+  it("面板检查后再搜索不会回落到太早文案事件", () => {
+    const state = playSession(["安抚老太太", "按报警铃", "检查面板", "检查一下"]);
+    expect(state.triggeredEventIds).toContain("check-panel");
+    expect(state.flags.panel_checked).toBe(true);
+    // 重复搜索走 check-panel-repeat,不会再触发误导性的 too-early 卡
+    expect(state.triggeredEventIds).not.toContain("check-panel-too-early");
+  });
 });

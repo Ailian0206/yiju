@@ -28,12 +28,13 @@ describe("createLLMNarrator", () => {
   it("请求成功时返回 API 给的文本,只带精简过的 state 字段(不泄漏完整存档)", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(new Response(JSON.stringify({ text: "生成的叙述" }), { status: 200 }));
 
-    const narrator = createLLMNarrator();
+    const narrator = createLLMNarrator("lost-cat");
     const text = await narrator.narrate({ kind: "unknown" }, baseState, "乱打的话");
 
     expect(text).toBe("生成的叙述");
     const [, requestInit] = vi.mocked(fetch).mock.calls[0];
     const sentBody = JSON.parse((requestInit as RequestInit).body as string);
+    expect(sentBody.moduleId).toBe("lost-cat");
     expect(sentBody.state).toEqual({
       currentLocationId: LOCATIONS.UNIT_ENTRANCE,
       sky: "傍晚",
@@ -46,14 +47,14 @@ describe("createLLMNarrator", () => {
   it("HTTP 状态非 2xx 时抛出异常(交给上层的 createLostCatNarrator 接住)", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(new Response("", { status: 503 }));
 
-    const narrator = createLLMNarrator();
+    const narrator = createLLMNarrator("lost-cat");
     await expect(narrator.narrate({ kind: "noop" }, baseState, "")).rejects.toThrow();
   });
 
   it("响应体没有 text 字段时抛出异常", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(new Response(JSON.stringify({}), { status: 200 }));
 
-    const narrator = createLLMNarrator();
+    const narrator = createLLMNarrator("lost-cat");
     await expect(narrator.narrate({ kind: "noop" }, baseState, "")).rejects.toThrow();
   });
 });
