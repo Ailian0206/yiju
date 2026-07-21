@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-21
-当前阶段:**P2:《春运抢票夜》已合并;下一局《照顾植物一周》**
+当前阶段:**P2 五模组均可玩已完成(M6–M11)**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/superpowers/plans/2026-07-21-home-and-modules.md`](docs/superpowers/plans/2026-07-21-home-and-modules.md)
 
 ## 里程碑(找猫模组)
