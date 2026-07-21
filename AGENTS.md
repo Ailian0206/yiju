@@ -18,4 +18,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 8. Update `PROJECT_STATUS.md` when a milestone branch, PR, CI state, or project status changes.
 9. Use Chinese Conventional Commits. One logical change per commit.
 10. Use milestone branches and PRs. Merge with a merge commit; do not squash, rebase, or force push.
-11. Never commit secrets, personal access tokens, `.env` files, or paid-provider responses.
+11. Milestone PRs must run independent Claude Code review once after creation: `claude --permission-mode auto --model sonnet -p "/codex-independent-pr-review <PR>"`. Do not substitute same-process code-reviewer. Do not re-invoke Claude after the first successful review.
+12. Never commit secrets, personal access tokens, `.env` files, or paid-provider responses.
