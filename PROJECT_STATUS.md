@@ -1,8 +1,8 @@
 # PROJECT_STATUS:Yiju(一局)
 
-更新时间:2026-07-20
-当前阶段:**找猫功能闭环;试玩反馈迭代中(滚动条样式 + 开局轻引导)**
-决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md)
+更新时间:2026-07-21
+当前阶段:**P2 主页选关 + 五模组展示已落地;下一可玩模组为《电梯故障》**
+决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/superpowers/plans/2026-07-21-home-and-modules.md`](docs/superpowers/plans/2026-07-21-home-and-modules.md)
 
 ## 里程碑(找猫模组)
 
@@ -16,6 +16,22 @@
 | 试玩反馈修复 | 新手引导(开局叙述提示 + 建议行动按钮) | 已完成 | [#6](https://github.com/Ailian0206/yiju/pull/6) |
 | M5(P1) | 接入 DeepSeek:`Narrator` 改异步、混合路由(填词区走 LLM,主线仍用模板)、`/api/narrate` 代理、每局调用上限 | 已完成(真实冒烟通过) | [#7](https://github.com/Ailian0206/yiju/pull/7) |
 | 呼叫补齐 | `call` 事件卡 + `requiresCloseness`(远时首次喊名提档) | 已完成 | [#8](https://github.com/Ailian0206/yiju/pull/8) |
+
+## P2 里程碑(主页与多模组)
+
+| 里程碑 | 内容 | 状态 | PR |
+| --- | --- | --- | --- |
+| 计划 | 主页 + 五模组路线图与确认决策 | 已完成 | [#10](https://github.com/Ailian0206/yiju/pull/10) |
+| M6 | 模组注册表、主页选关、`/modules/[id]` 介绍页、`/play/[id]` 可玩路由;未完成标「即将开发」 | 进行中(本分支) | — |
+| M7 | Dofun 封面 + `docs/art-briefs.md` | 进行中(与 M6 同批) | — |
+| M8+ | 《电梯故障》可玩内容起,按序推进 | 未开始 | — |
+
+### P2 已确认产品决策
+
+- 主页展示全部 5 个模组;实现按序推进,未完成只展示不伪装可玩。
+- 未完成状态文案:**即将开发**。
+- 每局入口先到介绍页(故事背景 + 玩法),可玩模组再点「开始这一局」。
+- 封面用公司 Dofun `gpt-image-2`,落盘 `public/modules/{id}/cover.webp`。
 
 ## P0 自测(对照产品文档 §9 成功标准)
 
@@ -41,9 +57,11 @@
 ## 外部依赖
 
 - LLM Provider:DeepSeek(OpenAI 兼容 API),密钥经 `DEEPSEEK_API_KEY` 环境变量注入(本地放 `.env.local`,勿写入 `.env.example`),不提交到仓库。未配置时全程 mock、零成本;配置后只在"填词区"场景调用,每局上限 15 次,超限或失败静默回落模板。自动化测试全程 mock `fetch`。2026-07-20 已对 `/api/narrate` 做真实冒烟:需在请求体里显式 `thinking: { type: "disabled" }`,否则 V4-flash 默认推理会吃光 `max_tokens`,返回空 content。
+- 封面生图:Dofun `gpt-image-2`(见 `docs/art-briefs.md`),产物为本地静态资源。
 - 部署:本地运行;线上部署视效果再定。公开部署前须补服务端速率限制(安全审查 HIGH,本地可接受)。
 
 ## 备注
 
 - 本仓由 Claude Code / Cursor Agent 驱动开发;PR 合并前做独立审查(见 `AGENT.md`)。
 - M0–M5 已完成;M5 安全审查无 CRITICAL,HIGH(服务端限流)记为公开部署前置条件。
+- 本地试玩:`npm run dev -- --hostname 127.0.0.1 --port 3219` → http://127.0.0.1:3219/
