@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-21
-当前阶段:**P2:《电梯故障》可玩交付中;下一局为《相亲局翻车》**
+当前阶段:**P2:《电梯故障》已合并;进行中《相亲局翻车》**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/superpowers/plans/2026-07-21-home-and-modules.md`](docs/superpowers/plans/2026-07-21-home-and-modules.md)
 
 ## 里程碑(找猫模组)
@@ -25,8 +25,8 @@
 | M6 | 模组注册表、主页选关、`/modules/[id]` 介绍页、`/play/[id]` 可玩路由;未完成标「即将开发」 | 已完成 | [#11](https://github.com/Ailian0206/yiju/pull/11) |
 | M7 | Dofun 封面 + `docs/art-briefs.md` | 已完成(与 M6 同批) | [#11](https://github.com/Ailian0206/yiju/pull/11) |
 | 审核流程 | 里程碑 PR 改用 Claude `/codex-independent-pr-review` | 已完成 | [#12](https://github.com/Ailian0206/yiju/pull/12) |
-| M8 | 《电梯故障 60 分钟》完整可玩 + 模组 UI 文案槽 | 待合并 | — |
-| M9 | 《相亲局翻车》完整可玩 | 未开始 | — |
+| M8 | 《电梯故障 60 分钟》完整可玩 + 模组 UI 文案槽 | 已完成 | [#13](https://github.com/Ailian0206/yiju/pull/13) |
+| M9 | 《相亲局翻车》完整可玩 | 进行中 | — |
 | M10 | 《春运抢票夜》完整可玩 | 未开始 | — |
 | M11 | 引擎日/阶段 + 《照顾植物一周》 | 未开始 | — |
 
