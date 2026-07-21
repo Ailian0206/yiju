@@ -5,6 +5,7 @@ import { blindDateVocabulary } from "./lexicon";
 import { blindDateMeta } from "./meta";
 import { createInitialState, blindDateUi, OPENING_NARRATION } from "./module";
 import { createBlindDateNarrator } from "./narrator-config";
+import { blindDateSceneArt } from "./scene-art";
 import { getSuggestedActions } from "./suggestions";
 
 export function createBlindDateBundle(): ModuleBundle {
@@ -16,6 +17,7 @@ export function createBlindDateBundle(): ModuleBundle {
     openingNarration: OPENING_NARRATION,
     getSuggestedActions,
     ui: blindDateUi,
+    sceneArt: blindDateSceneArt,
     createNarrator(options) {
       return createBlindDateNarrator({
         llmNarrator: options?.llmNarrator ?? createLLMNarrator("blind-date"),

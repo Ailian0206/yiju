@@ -5,6 +5,7 @@ import { plantWeekVocabulary } from "./lexicon";
 import { plantWeekMeta } from "./meta";
 import { createInitialState, plantWeekUi, OPENING_NARRATION } from "./module";
 import { createPlantWeekNarrator } from "./narrator-config";
+import { plantWeekSceneArt } from "./scene-art";
 import { getSuggestedActions } from "./suggestions";
 
 export function createPlantWeekBundle(): ModuleBundle {
@@ -16,6 +17,7 @@ export function createPlantWeekBundle(): ModuleBundle {
     openingNarration: OPENING_NARRATION,
     getSuggestedActions,
     ui: plantWeekUi,
+    sceneArt: plantWeekSceneArt,
     createNarrator(options) {
       return createPlantWeekNarrator({
         llmNarrator: options?.llmNarrator ?? createLLMNarrator("plant-week"),

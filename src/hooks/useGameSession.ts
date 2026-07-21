@@ -7,6 +7,7 @@ import { createKeywordIntentResolver } from "@/engine/intent";
 import { reduce } from "@/engine/reducer";
 import type { GameState, LogEntry } from "@/engine/types";
 import { getModuleBundle } from "@/content/registry";
+import { resolveSceneImage } from "@/content/shared/scene-art";
 import { createLLMNarrator } from "@/content/lost-cat/llm-narrator";
 
 function storageKeyFor(moduleId: string): string {
@@ -30,9 +31,9 @@ function saveState(moduleId: string, state: GameState): void {
   }
 }
 
-function makeLogEntry(kind: LogEntry["kind"], text: string): LogEntry {
+function makeLogEntry(kind: LogEntry["kind"], text: string, imageSrc?: string): LogEntry {
   const id = typeof crypto !== "undefined" ? crypto.randomUUID() : `${kind}-${Date.now()}-${Math.random()}`;
-  return { id, kind, text };
+  return imageSrc ? { id, kind, text, imageSrc } : { id, kind, text };
 }
 
 export function useGameSession(moduleId: string) {
@@ -72,15 +73,20 @@ export function useGameSession(moduleId: string) {
       setIsThinking(true);
       try {
         const narration = await narratorRef.current.narrate(result.outcome, result.nextState, text);
+        const imageSrc = resolveSceneImage(bundle.sceneArt, result.outcome);
         setState({
           ...result.nextState,
-          log: [...state.log, makeLogEntry("player", text), makeLogEntry("narration", narration)],
+          log: [
+            ...state.log,
+            makeLogEntry("player", text),
+            makeLogEntry("narration", narration, imageSrc),
+          ],
         });
       } finally {
         setIsThinking(false);
       }
     },
-    [state, isThinking],
+    [state, isThinking, bundle],
   );
 
   const restart = useCallback(() => {
@@ -98,6 +104,7 @@ export function useGameSession(moduleId: string) {
     meta: bundle.meta,
     ui: bundle.ui,
     openingNarration: bundle.openingNarration,
+    openingImageSrc: bundle.sceneArt?.opening,
     getSuggestedActions: bundle.getSuggestedActions,
   };
 }

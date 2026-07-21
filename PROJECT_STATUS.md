@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-21
-当前阶段:**P2 五模组均可玩已完成(M6–M11)**
+当前阶段:**P2 收口完成(M6–M12：五模组可玩 + 局内插图与全程引导)**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/superpowers/plans/2026-07-21-home-and-modules.md`](docs/superpowers/plans/2026-07-21-home-and-modules.md)
 
 ## 里程碑(找猫模组)
@@ -29,6 +29,7 @@
 | M9 | 《相亲局翻车》完整可玩 | 已完成 | [#14](https://github.com/Ailian0206/yiju/pull/14) |
 | M10 | 《春运抢票夜》完整可玩 | 已完成 | [#15](https://github.com/Ailian0206/yiju/pull/15) |
 | M11 | 引擎日/阶段 + 《照顾植物一周》 | 已完成 | [#16](https://github.com/Ailian0206/yiju/pull/16) |
+| M12 | 局内插图 + 全程下一步引导 | 已完成 | — |
 
 ### P2 已确认产品决策
 

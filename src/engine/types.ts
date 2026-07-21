@@ -50,6 +50,8 @@ export interface LogEntry {
   /** player = 玩家输入回显;narration = 引擎生成的叙述文本。 */
   kind: "player" | "narration";
   text: string;
+  /** 可选局内插图路径(由内容层在写入日志时附上,引擎不负责选图)。 */
+  imageSrc?: string;
 }
 
 /**

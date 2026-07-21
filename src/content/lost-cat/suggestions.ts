@@ -1,30 +1,50 @@
-// 新手引导:只在开局给一次「第一步」提示,找到猫后再提示结局动作。
-// 中盘不再弹出最优路径——用户反馈一路点建议就能通关,失去探索感。
+// 全程给「当前最合理的下一步」提示(最多 2 条),加快通关,仍允许自由输入岔开。
 import type { GameState } from "@/engine/types";
 import { LOCATIONS } from "./module";
 
-function hasPlayerActed(state: GameState): boolean {
-  return state.log.some((entry) => entry.kind === "player");
+function has(state: GameState, eventId: string): boolean {
+  return state.triggeredEventIds.includes(eventId);
 }
 
 export function getSuggestedActions(state: GameState): string[] {
-  if (state.status !== "playing") {
-    return [];
-  }
+  if (state.status !== "playing") return [];
 
-  // 结局动作不是探路剧透,找到猫后仍可点一下带回家
   if (state.closeness === "已找到") {
     return ["带年糕回家"];
   }
 
-  if (hasPlayerActed(state)) {
-    return [];
+  // 后期旗帜优先,避免被早期「去绿化带」分支抢走
+  if (state.flags.heard_cat) {
+    if (state.currentLocationId !== LOCATIONS.LOCKERS) return ["去快递柜"];
+    return ["打开纸箱"];
   }
 
-  // 开局只提示问门卫;若玩家先移动到别处,也不再硬塞整条通关链
-  if (state.currentLocationId === LOCATIONS.UNIT_ENTRANCE) {
+  if (state.flags.got_flashlight) {
+    if (state.currentLocationId !== LOCATIONS.GARAGE) return ["去车库"];
+    return ["仔细找找"];
+  }
+
+  if (!has(state, "ask-guard")) {
     return ["问问门卫"];
   }
 
-  return [];
+  if (state.currentLocationId !== LOCATIONS.GREENBELT && !has(state, "search-greenbelt")) {
+    return ["去绿化带"];
+  }
+
+  if (state.currentLocationId === LOCATIONS.GREENBELT && !has(state, "search-greenbelt")) {
+    return ["仔细找找"];
+  }
+
+  if (has(state, "search-greenbelt") && !has(state, "talk-aunt")) {
+    return state.currentLocationId === LOCATIONS.GREENBELT
+      ? ["问问陈阿姨"]
+      : ["去绿化带", "问问陈阿姨"];
+  }
+
+  if (state.currentLocationId !== LOCATIONS.OFFICE) {
+    return ["去物业"];
+  }
+
+  return ["找找看"];
 }

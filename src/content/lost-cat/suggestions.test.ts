@@ -11,71 +11,74 @@ function playerLog(text: string): LogEntry {
   return { id: `p-${text}`, kind: "player", text };
 }
 
-describe("getSuggestedActions — 开局轻引导(不可通关点击)", () => {
-  it("开局、尚未行动:建议问门卫", () => {
+describe("getSuggestedActions — 全程下一步引导", () => {
+  it("开局建议问门卫", () => {
     expect(getSuggestedActions(makeState())).toEqual(["问问门卫"]);
   });
 
-  it("玩家已经有过任意输入后:不再给建议,避免一路点提示通关", () => {
-    const state = makeState({
-      log: [playerLog("随便试试")],
-      currentLocationId: LOCATIONS.GREENBELT,
-    });
-    expect(getSuggestedActions(state)).toEqual([]);
+  it("问过门卫后建议去绿化带", () => {
+    expect(
+      getSuggestedActions(
+        makeState({
+          triggeredEventIds: ["ask-guard"],
+          log: [playerLog("问问门卫")],
+          clues: 1,
+        }),
+      ),
+    ).toEqual(["去绿化带"]);
   });
 
-  it("问过门卫后即使还在楼下:也不再建议去绿化带", () => {
-    const state = makeState({
-      triggeredEventIds: ["ask-guard"],
-      log: [playerLog("问问门卫")],
-      clues: 1,
-    });
-    expect(getSuggestedActions(state)).toEqual([]);
+  it("在绿化带尚未搜证时建议仔细找找", () => {
+    expect(
+      getSuggestedActions(
+        makeState({
+          triggeredEventIds: ["ask-guard"],
+          currentLocationId: LOCATIONS.GREENBELT,
+          log: [playerLog("去绿化带")],
+        }),
+      ),
+    ).toEqual(["仔细找找"]);
   });
 
-  it("中盘各关键地点都不再弹出最优下一步", () => {
-    const midgame = [
-      makeState({
-        currentLocationId: LOCATIONS.GREENBELT,
-        log: [playerLog("去绿化带")],
-      }),
-      makeState({
-        currentLocationId: LOCATIONS.OFFICE,
-        log: [playerLog("去物业")],
-      }),
-      makeState({
-        currentLocationId: LOCATIONS.GARAGE,
-        flags: { got_flashlight: true },
-        log: [playerLog("去车库")],
-      }),
-      makeState({
-        currentLocationId: LOCATIONS.LOCKERS,
-        flags: { heard_cat: true },
-        log: [playerLog("去快递柜")],
-      }),
-    ];
-
-    for (const state of midgame) {
-      expect(getSuggestedActions(state)).toEqual([]);
-    }
+  it("已有手电时建议去车库", () => {
+    expect(
+      getSuggestedActions(
+        makeState({
+          triggeredEventIds: ["ask-guard", "search-greenbelt", "talk-aunt", "search-office-flashlight"],
+          flags: { got_flashlight: true },
+          log: [playerLog("找找看")],
+        }),
+      ),
+    ).toEqual(["去车库"]);
   });
 
-  it("亲近感已经是「已找到」:仍建议带年糕回家(结局动作,不是探路)", () => {
-    const state = makeState({
-      closeness: "已找到",
-      currentLocationId: LOCATIONS.LOCKERS,
-      log: [playerLog("打开纸箱")],
-    });
-    expect(getSuggestedActions(state)).toEqual(["带年糕回家"]);
+  it("听见猫后建议去快递柜开箱", () => {
+    expect(
+      getSuggestedActions(
+        makeState({
+          triggeredEventIds: ["ask-guard", "search-greenbelt", "search-garage-with-flashlight"],
+          flags: { got_flashlight: true, heard_cat: true },
+          log: [playerLog("仔细找找")],
+        }),
+      ),
+    ).toEqual(["去快递柜"]);
   });
 
-  it("游戏已结束时不给建议", () => {
+  it("亲近感已找到时建议带回家", () => {
+    expect(
+      getSuggestedActions(
+        makeState({
+          closeness: "已找到",
+          currentLocationId: LOCATIONS.LOCKERS,
+          log: [playerLog("打开纸箱")],
+        }),
+      ),
+    ).toEqual(["带年糕回家"]);
+  });
+
+  it("游戏结束不给建议", () => {
     expect(getSuggestedActions(makeState({ status: "won", log: [playerLog("带年糕回家")] }))).toEqual(
       [],
     );
-  });
-
-  it("开局建议数量不超过 1 条", () => {
-    expect(getSuggestedActions(makeState()).length).toBeLessThanOrEqual(1);
   });
 });

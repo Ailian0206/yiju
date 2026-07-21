@@ -30,6 +30,31 @@
   }
 }
 
+.narrationBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: 78ch;
+  align-self: stretch;
+}
+
+.opening {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 78ch;
+}
+
+.scene {
+  width: 100%;
+  max-width: 36rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: calc(var(--radius-card) - 4px);
+  box-shadow: var(--shadow-card);
+  display: block;
+}
+
 .player {
   align-self: flex-end;
   max-width: 80%;
@@ -46,7 +71,7 @@
   font-size: var(--text-narrative);
   line-height: 1.85;
   color: var(--color-ink);
-  max-width: 78ch;
+  margin: 0;
 }
 
 .empty {
