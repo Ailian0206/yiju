@@ -7,7 +7,8 @@ test.describe("主页选关", () => {
     await expect(page.getByRole("heading", { name: "一局", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "找回走丢的猫" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "电梯故障 60 分钟" })).toBeVisible();
-    await expect(page.getByText("即将开发").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "照顾植物一周" })).toBeVisible();
+    await expect(page.getByText("即将开发")).toHaveCount(0);
 
     await page.locator('a[href="/modules/lost-cat"]').click();
     await expect(page).toHaveURL(/\/modules\/lost-cat/);
@@ -28,11 +29,13 @@ test.describe("主页选关", () => {
     await expect(page.getByRole("heading", { name: "电梯故障 60 分钟" })).toBeVisible();
   });
 
-  test("即将开发模组进入简介页,不能开玩", async ({ page }) => {
+  test("植物可从介绍页开玩", async ({ page }) => {
     await page.goto("/");
     await page.locator('a[href="/modules/plant-week"]').click();
     await expect(page).toHaveURL(/\/modules\/plant-week/);
-    await expect(page.getByText("即将开发")).toBeVisible();
-    await expect(page.getByRole("link", { name: "开始这一局" })).toHaveCount(0);
+    await expect(page.getByText("故事背景")).toBeVisible();
+    await page.getByRole("link", { name: "开始这一局" }).click();
+    await expect(page).toHaveURL(/\/play\/plant-week/);
+    await expect(page.getByRole("heading", { name: "照顾植物一周" })).toBeVisible();
   });
 });

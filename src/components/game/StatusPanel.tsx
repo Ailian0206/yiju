@@ -31,7 +31,11 @@ interface StatusPanelProps {
 }
 
 export function StatusPanel({ state, ui, onRestart }: StatusPanelProps) {
-  const skyText = ui.skyDisplay?.[state.sky] ?? state.sky;
+  // 日制模组优先展示「第 N 天 · 早晚」,经典模组仍用天色文案。
+  const skyText =
+    state.day !== undefined
+      ? `第${state.day}天 · ${state.phase ?? "早"}`
+      : (ui.skyDisplay?.[state.sky] ?? state.sky);
   const closenessText = ui.closenessDisplay?.[state.closeness] ?? state.closeness;
   const cluesPulse = useChangePulse(state.clues);
   const closenessPulse = useChangePulse(closenessText);

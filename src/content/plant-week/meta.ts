@@ -9,6 +9,6 @@ export const plantWeekMeta: ModuleMeta = {
   howToPlay:
     "按「天」推进。每天可用自然语言决定浇水、搬家、施肥或偷懒。关注湿度、光照与植物状态;撑过七天且植物仍健康即通关。",
   coverSrc: "/modules/plant-week/cover.webp",
-  status: "preview",
+  status: "playable",
   estimatedMinutes: 15,
 };

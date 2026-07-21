@@ -18,11 +18,16 @@ describe("content/registry", () => {
     }
   });
 
-  it("四个模组可玩,仅植物为即将开发", () => {
+  it("五个模组均可玩", () => {
     const playable = listPlayableModules().map((m) => m.id);
-    expect(playable).toEqual(["lost-cat", "elevator", "blind-date", "chunyun"]);
-    const preview = listModules().filter((m) => m.status === "preview");
-    expect(preview.map((m) => m.id)).toEqual(["plant-week"]);
+    expect(playable).toEqual([
+      "lost-cat",
+      "elevator",
+      "blind-date",
+      "chunyun",
+      "plant-week",
+    ]);
+    expect(listModules().filter((m) => m.status === "preview")).toEqual([]);
   });
 
   it("getModule 能取到找猫;未知 id 返回 undefined", () => {
@@ -30,11 +35,11 @@ describe("content/registry", () => {
     expect(getModule("no-such-module")).toBeUndefined();
   });
 
-  it("可玩模组能拿到 bundle;preview 拿不到", () => {
+  it("可玩模组都能拿到 bundle", () => {
     expect(getModuleBundle("lost-cat")?.meta.id).toBe("lost-cat");
     expect(getModuleBundle("elevator")?.meta.id).toBe("elevator");
     expect(getModuleBundle("blind-date")?.meta.id).toBe("blind-date");
     expect(getModuleBundle("chunyun")?.meta.id).toBe("chunyun");
-    expect(getModuleBundle("plant-week")).toBeUndefined();
+    expect(getModuleBundle("plant-week")?.meta.id).toBe("plant-week");
   });
 });

@@ -4,6 +4,9 @@
 /** 天色:每 3 次有效行动推进一档,到「天黑」即失败(若未通关)。 */
 export type SkyPhase = "傍晚" | "黄昏" | "擦黑" | "天黑";
 
+/** 日制模组的当天时段:早→晚→次日早。 */
+export type DayPhase = "早" | "晚";
+
 /** 亲近感:离目标物越来越近的抽象进度条,不是具体的"猫在哪"。 */
 export type Closeness = "远" | "有动静" | "很近" | "已找到";
 
@@ -33,6 +36,13 @@ export interface GameState {
   triggeredEventIds: string[];
   /** 叙事日志,供界面渲染滚动区。 */
   log: LogEntry[];
+  /**
+   * 可选日制:内容层设置后走「早/晚」推进,不再用行动次数推天色。
+   * day 为 1-based;超过 7 天由规则判负。
+   */
+  day?: number;
+  /** 与 day 配套的当天时段。 */
+  phase?: DayPhase;
 }
 
 export interface LogEntry {
