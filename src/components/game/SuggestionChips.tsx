@@ -8,7 +8,7 @@ interface SuggestionChipsProps {
   onPick: (text: string) => void;
 }
 
-/** 点了直接提交,不用先打字再回车——降低"不知道打什么"的门槛。 */
+/** 开局或卡住时出现;点了直接提交,降低空白输入门槛。 */
 export function SuggestionChips({ suggestions, disabled, onPick }: SuggestionChipsProps) {
   if (suggestions.length === 0) {
     return null;

@@ -5,10 +5,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createKeywordIntentResolver } from "@/engine/intent";
 import { reduce } from "@/engine/reducer";
-import type { GameState, LogEntry } from "@/engine/types";
+import type { ActionOutcome, GameState, LogEntry } from "@/engine/types";
 import { getModuleBundle } from "@/content/registry";
 import { resolveSceneImage } from "@/content/shared/scene-art";
+import { shouldOfferSuggestions } from "@/content/shared/suggestion-policy";
 import { createLLMNarrator } from "@/content/lost-cat/llm-narrator";
+
+function hasPlayerActed(state: GameState): boolean {
+  return state.log.some((entry) => entry.kind === "player");
+}
 
 function storageKeyFor(moduleId: string): string {
   return `yiju-${moduleId}-session-v1`;
@@ -48,6 +53,8 @@ export function useGameSession(moduleId: string) {
     return loadSavedState(moduleId) ?? bundle.createInitialState();
   });
   const [isThinking, setIsThinking] = useState(false);
+  // 最近一次 outcome:读档后为 null → 不提示,直到再次卡住
+  const [lastOutcomeKind, setLastOutcomeKind] = useState<ActionOutcome["kind"] | null>(null);
   const resolverRef = useRef(createKeywordIntentResolver(bundle.vocabulary));
   const narratorRef = useRef(bundle.createNarrator({ llmNarrator: createLLMNarrator(moduleId) }));
   const eventsRef = useRef(bundle.events);
@@ -74,6 +81,7 @@ export function useGameSession(moduleId: string) {
       try {
         const narration = await narratorRef.current.narrate(result.outcome, result.nextState, text);
         const imageSrc = resolveSceneImage(bundle.sceneArt, result.outcome);
+        setLastOutcomeKind(result.outcome.kind);
         setState({
           ...result.nextState,
           log: [
@@ -93,8 +101,24 @@ export function useGameSession(moduleId: string) {
     const fresh = bundle.createInitialState();
     narratorRef.current = bundle.createNarrator({ llmNarrator: createLLMNarrator(moduleId) });
     saveState(moduleId, fresh);
+    setLastOutcomeKind(null);
     setState(fresh);
   }, [bundle, moduleId]);
+
+  const getSuggestedActions = useCallback(
+    (current: GameState) => {
+      if (
+        !shouldOfferSuggestions({
+          hasPlayerActed: hasPlayerActed(current),
+          lastOutcomeKind,
+        })
+      ) {
+        return [];
+      }
+      return bundle.getSuggestedActions(current);
+    },
+    [bundle, lastOutcomeKind],
+  );
 
   return {
     state,
@@ -105,6 +129,6 @@ export function useGameSession(moduleId: string) {
     ui: bundle.ui,
     openingNarration: bundle.openingNarration,
     openingImageSrc: bundle.sceneArt?.opening,
-    getSuggestedActions: bundle.getSuggestedActions,
+    getSuggestedActions,
   };
 }
