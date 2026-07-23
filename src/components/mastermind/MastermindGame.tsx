@@ -47,8 +47,11 @@ function getBestSnapshot(): BestMap {
   return bestCache;
 }
 
+/** SSR/水合用:必须返回同一引用,否则 useSyncExternalStore 会判定快照变化而死循环。 */
+const EMPTY_BEST: BestMap = {};
+
 function getBestServerSnapshot(): BestMap {
-  return {};
+  return EMPTY_BEST;
 }
 
 function subscribeBest(onStoreChange: () => void) {
