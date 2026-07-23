@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { PEG_COLORS } from "@/games/mastermind/colors";
 import {
@@ -31,8 +31,10 @@ const BEST_KEY = "yiju-mastermind-best";
 
 type BestMap = Partial<Record<DifficultyId, number>>;
 
+let bestCache: BestMap | null = null;
+const bestListeners = new Set<() => void>();
+
 function readBest(): BestMap {
-  if (typeof window === "undefined") return {};
   try {
     return JSON.parse(localStorage.getItem(BEST_KEY) ?? "{}") as BestMap;
   } catch {
@@ -40,8 +42,24 @@ function readBest(): BestMap {
   }
 }
 
-function writeBest(map: BestMap) {
+function getBestSnapshot(): BestMap {
+  if (bestCache === null) bestCache = readBest();
+  return bestCache;
+}
+
+function getBestServerSnapshot(): BestMap {
+  return {};
+}
+
+function subscribeBest(onStoreChange: () => void) {
+  bestListeners.add(onStoreChange);
+  return () => bestListeners.delete(onStoreChange);
+}
+
+function persistBest(map: BestMap) {
+  bestCache = map;
   localStorage.setItem(BEST_KEY, JSON.stringify(map));
+  bestListeners.forEach((listener) => listener());
 }
 
 /** 位准/色准钉:固定单行不换行,并附文字计数防看不清。 */
@@ -97,11 +115,11 @@ export function MastermindGame() {
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [draft, setDraft] = useState<(number | null)[]>([]);
   const [activeSlot, setActiveSlot] = useState(0);
-  const [best, setBest] = useState<BestMap>({});
-
-  useEffect(() => {
-    setBest(readBest());
-  }, []);
+  const best = useSyncExternalStore(
+    subscribeBest,
+    getBestSnapshot,
+    getBestServerSnapshot,
+  );
 
   const config = DIFFICULTIES[difficulty];
   const palette = useMemo(
@@ -161,13 +179,10 @@ export function MastermindGame() {
 
     if (isWin(feedback, config.codeLength)) {
       const used = nextHistory.length;
-      setBest((prev) => {
-        const current = prev[difficulty];
-        if (current !== undefined && used >= current) return prev;
-        const next = { ...prev, [difficulty]: used };
-        writeBest(next);
-        return next;
-      });
+      const current = best[difficulty];
+      if (current === undefined || used < current) {
+        persistBest({ ...best, [difficulty]: used });
+      }
       setPhase("won");
       return;
     }
@@ -187,8 +202,7 @@ export function MastermindGame() {
     (config.allowDuplicates || new Set(draft).size === draft.length);
   const clearance =
     phase === "won" ? rateClearance(history.length, config.maxAttempts) : null;
-  const isNewBest =
-    phase === "won" && best[difficulty] === history.length;
+  const isNewBest = phase === "won" && best[difficulty] === history.length;
 
   return (
     <div className={styles.page}>
@@ -391,7 +405,7 @@ export function MastermindGame() {
             >
               <h2>
                 {phase === "won"
-                  ? clearance?.label ?? "破译成功"
+                  ? (clearance?.label ?? "破译成功")
                   : "终端锁定失败"}
               </h2>
               <p>
