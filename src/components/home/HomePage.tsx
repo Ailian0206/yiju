@@ -1,33 +1,36 @@
-import Link from "next/link";
 import { listModules } from "@/content/registry";
+import { listChallenges } from "@/challenges/registry";
 import { ModuleCard } from "@/components/home/ModuleCard";
+import { ChallengeCard } from "@/components/home/ChallengeCard";
 import styles from "./HomePage.module.css";
 
 export function HomePage() {
   const modules = listModules();
+  const challenges = listChallenges();
 
   return (
     <div className={styles.page}>
       <div className={styles.atmosphere} aria-hidden />
       <header className={styles.hero}>
-        <p className={styles.eyebrow}>轻量中文文字局</p>
+        <p className={styles.eyebrow}>轻量中文文字局 · 益智挑战</p>
         <h1 className={styles.brand}>一局</h1>
         <p className={styles.lead}>
-          每一局都有限时、可见状态和明确结局。用自然语言玩,不是无限闲聊。
+          每一局都有限时、可见状态和明确结局。用自然语言玩故事,或挑战色码破译。
         </p>
       </header>
       <section className={styles.section} aria-labelledby="challenge-heading">
         <h2 id="challenge-heading" className={styles.sectionTitle}>
-          挑战局(试玩)
+          挑战局
         </h2>
-        <Link href="/challenges/mastermind" className={styles.challengeCard}>
-          <strong>密码破译</strong>
-          <span>Mastermind · 猜颜色序列 · 简单/普通/困难</span>
-        </Link>
+        <div className={styles.challengeGrid}>
+          {challenges.map((challenge) => (
+            <ChallengeCard key={challenge.id} challenge={challenge} />
+          ))}
+        </div>
       </section>
       <section className={styles.section} aria-labelledby="module-heading">
         <h2 id="module-heading" className={styles.sectionTitle}>
-          选择一局
+          故事局
         </h2>
         <div className={styles.grid}>
           {modules.map((module) => (

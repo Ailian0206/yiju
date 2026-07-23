@@ -1,10 +1,12 @@
+/* 浅色暖纸主题:与故事局 tokens 对齐,避免深色终端脸。 */
+
 .page {
   position: relative;
   min-height: 100dvh;
   max-width: 960px;
   margin: 0 auto;
   padding: var(--space-md) var(--space-md) var(--space-lg);
-  color: #e8eef7;
+  color: var(--color-ink);
 }
 
 .glow {
@@ -12,9 +14,9 @@
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse at 20% 0%, #1e3a5f 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 30%, #3b1d4a 0%, transparent 45%),
-    linear-gradient(165deg, #0b1220 0%, #121a2b 55%, #0a1018 100%);
+    radial-gradient(ellipse at 18% 0%, oklch(90% 0.06 75 / 0.7), transparent 48%),
+    radial-gradient(ellipse at 92% 18%, oklch(82% 0.07 45 / 0.35), transparent 42%),
+    linear-gradient(180deg, oklch(96% 0.025 80), var(--color-paper));
 }
 
 .header {
@@ -26,20 +28,20 @@
 
 .back {
   font-size: var(--text-small);
-  color: #93a4c3;
+  color: var(--color-accent-strong);
   width: fit-content;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .back:hover {
-  color: #d7e3ff;
+  color: var(--color-ink);
 }
 
 .eyebrow {
   font-size: var(--text-small);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #7dd3c7;
+  color: var(--color-accent-strong);
 }
 
 .title {
@@ -47,12 +49,14 @@
   font-size: clamp(1.9rem, 1.4rem + 2vw, 2.5rem);
   font-weight: 700;
   line-height: 1.1;
+  color: var(--color-ink);
 }
 
 .lead {
   font-size: var(--text-small);
   line-height: 1.55;
-  color: #9aabcb;
+  color: var(--color-ink-muted);
+  max-width: 40rem;
 }
 
 .setup {
@@ -68,8 +72,9 @@
   gap: 1rem;
   padding: 0.75rem 0.9rem;
   border-radius: 12px;
-  background: #141e30;
-  border: 1px solid #2a3b58;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
 }
 
 .legendItem {
@@ -77,7 +82,7 @@
   align-items: center;
   gap: 0.45rem;
   font-size: var(--text-small);
-  color: #c5d2ea;
+  color: var(--color-ink-muted);
   white-space: nowrap;
 }
 
@@ -92,45 +97,45 @@
   text-align: left;
   border-radius: 12px;
   padding: 0.9rem 1rem;
-  border: 1px solid #2a3b58;
-  background: #141e30;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper-raised);
   color: inherit;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   font: inherit;
-  transition: border-color var(--duration-fast), background var(--duration-fast);
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
 .diffCard:hover {
-  border-color: #4a628a;
+  border-color: var(--color-accent);
 }
 
 .diffActive {
-  border-color: #5eead4;
-  background: #172636;
-  box-shadow: 0 0 0 1px #5eead466;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
 }
 
 .diffCard strong,
 .diffActive strong {
   font-size: 1.05rem;
+  color: var(--color-ink);
 }
 
 .diffCard > span,
 .diffActive > span {
   font-size: var(--text-small);
-  color: #8fa0bf;
+  color: var(--color-ink-muted);
 }
 
 .diffBlurb {
-  color: #b7c5df !important;
+  color: var(--color-ink-muted) !important;
   line-height: 1.4;
 }
 
 .record {
-  color: #5eead4 !important;
+  color: var(--color-accent-strong) !important;
   font-weight: 600;
 }
 
@@ -138,11 +143,11 @@
 .submitBtn {
   border: none;
   border-radius: 999px;
-  padding: 0.85rem 1.4rem;
+  padding: 0.75rem 1.3rem;
   font: inherit;
   font-weight: 600;
-  color: #06201c;
-  background: linear-gradient(135deg, #5eead4, #2dd4bf);
+  color: var(--color-paper-raised);
+  background: var(--color-accent);
   cursor: pointer;
 }
 
@@ -154,23 +159,23 @@
 
 .primary:not(:disabled):hover,
 .submitBtn:not(:disabled):hover {
-  filter: brightness(1.06);
+  background: var(--color-accent-strong);
 }
 
 .ghost {
-  border: 1px solid #33465f;
+  border: 1px solid var(--color-line);
   border-radius: 999px;
   padding: 0.45rem 0.9rem;
   font: inherit;
   font-size: var(--text-small);
-  color: #c5d2ea;
-  background: transparent;
+  color: var(--color-ink-muted);
+  background: var(--color-paper-raised);
   cursor: pointer;
 }
 
 .ghost:hover {
-  border-color: #5eead4;
-  color: #fff;
+  border-color: var(--color-accent);
+  color: var(--color-ink);
 }
 
 .board {
@@ -185,18 +190,17 @@
   align-items: center;
   gap: 0.5rem;
   font-size: var(--text-small);
-  color: #9aabcb;
+  color: var(--color-ink-muted);
 }
 
 .metaChip {
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  background: #182338;
-  border: 1px solid #2c3f5c;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
   white-space: nowrap;
 }
 
-/* 左:提交结果列表;右:选色+提交按钮 */
 .playZone {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
@@ -212,12 +216,13 @@
   max-height: min(72vh, 620px);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0.15rem 0.45rem 0.15rem 0.1rem;
+  padding: 0.2rem 0.5rem 0.2rem 0.15rem;
   border-radius: 12px;
-  border: 1px solid #24344f;
-  background: #0e1624cc;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-card);
   scrollbar-width: thin;
-  scrollbar-color: #4a628a #121c2e;
+  scrollbar-color: oklch(70% 0.04 70) oklch(94% 0.02 80);
 }
 
 .history::-webkit-scrollbar {
@@ -226,46 +231,46 @@
 
 .history::-webkit-scrollbar-track {
   margin: 6px 0;
-  background: #121c2e;
+  background: oklch(94% 0.02 80);
   border-radius: 999px;
 }
 
 .history::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #5a7399, #3a4d6d);
+  background: oklch(72% 0.05 60);
   border-radius: 999px;
-  border: 2px solid #121c2e;
+  border: 2px solid oklch(94% 0.02 80);
 }
 
 .history::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #7dd3c7, #4a628a);
+  background: var(--color-accent);
 }
 
 .row {
   display: grid;
-  /* 中间色钉,右侧反馈顶到行尾,中间留空 */
   grid-template-columns: 1.6rem max-content 1fr;
   align-items: center;
   column-gap: 0.75rem;
   padding: 0.45rem 0.7rem;
   border-radius: 10px;
-  background: #141e30aa;
-  border: 1px solid #24344f;
+  background: oklch(97.5% 0.012 80);
+  border: 1px solid var(--color-line);
   width: 100%;
   box-sizing: border-box;
 }
 
 .rowActive {
-  border-color: #5eead466;
-  background: #1a2a40;
+  border-color: var(--color-accent);
+  background: oklch(98% 0.02 75);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-accent) 35%, transparent);
 }
 
 .rowEmpty {
-  opacity: 0.35;
+  opacity: 0.4;
 }
 
 .rowIndex {
   font-size: var(--text-small);
-  color: #6f809e;
+  color: var(--color-ink-muted);
   text-align: center;
 }
 
@@ -284,15 +289,15 @@
   height: 1.85rem;
   border-radius: 50%;
   flex-shrink: 0;
-  border: 2px solid #0a1018;
-  box-shadow: inset 0 1px 2px rgb(255 255 255 / 0.25);
+  border: 2px solid oklch(90% 0.02 80);
+  box-shadow: inset 0 1px 2px rgb(255 255 255 / 0.35);
 }
 
 .slot,
 .slotActive {
-  background: #0d1524;
+  background: oklch(95% 0.015 80);
   border-style: dashed;
-  border-color: #3a4d6d;
+  border-color: oklch(78% 0.03 70);
   cursor: pointer;
   padding: 0;
 }
@@ -300,17 +305,16 @@
 .slotGhost {
   background: transparent;
   border-style: dashed;
-  border-color: #2a3b58;
+  border-color: oklch(85% 0.02 70);
   box-shadow: none;
 }
 
 .slotActive {
-  border-color: #5eead4;
+  border-color: var(--color-accent);
   border-style: solid;
-  box-shadow: 0 0 0 3px #5eead433;
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-accent) 25%, transparent);
 }
 
-/* 反馈钉靠右,与颜色圆拉开距离 */
 .feedback {
   display: flex;
   flex-wrap: nowrap;
@@ -342,45 +346,44 @@
 }
 
 .exact {
-  background: #05070c;
-  border: 2px solid #f8fafc;
+  background: #1c1917;
+  border: 2px solid #fff;
   box-shadow:
-    0 0 0 1px #94a3b8,
-    0 0 6px rgb(248 250 252 / 0.35);
+    0 0 0 1px oklch(55% 0.02 50),
+    0 1px 2px rgb(0 0 0 / 0.2);
 }
 
 .colorOnly {
-  background: #f8fafc;
-  border: 2px solid #cbd5e1;
-  box-shadow: 0 0 0 1px #64748b;
+  background: #fff;
+  border: 2px solid oklch(70% 0.02 50);
+  box-shadow: 0 0 0 1px oklch(85% 0.01 50);
 }
 
 .keyEmpty {
   background: transparent;
-  border: 1.5px dashed #3a4d6d;
+  border: 1.5px dashed oklch(78% 0.02 70);
   box-shadow: none;
 }
 
 .feedbackText {
   font-size: 0.78rem;
-  color: #a8b8d4;
-  letter-spacing: 0.01em;
+  color: var(--color-ink-muted);
 }
 
 .feedbackSep {
   margin: 0 0.2rem;
-  color: #64748b;
+  color: oklch(70% 0.02 50);
 }
 
 .exactLabel {
-  color: #f1f5f9;
+  color: var(--color-ink);
   font-style: normal;
   font-weight: 700;
   margin-right: 0.1rem;
 }
 
 .colorLabel {
-  color: #e2e8f0;
+  color: var(--color-ink);
   font-style: normal;
   font-weight: 700;
   margin-right: 0.1rem;
@@ -390,7 +393,7 @@
   justify-self: end;
   margin-left: 1.25rem;
   font-size: 0.75rem;
-  color: #5eead4;
+  color: var(--color-accent-strong);
   white-space: nowrap;
 }
 
@@ -400,8 +403,9 @@
   gap: 0.75rem;
   padding: 0.95rem 1.1rem;
   border-radius: 16px;
-  background: #152033;
-  border: 1px solid #2c3f5c;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
   height: fit-content;
   position: sticky;
   top: 0.75rem;
@@ -409,7 +413,7 @@
 
 .composeHint {
   font-size: var(--text-small);
-  color: #8fa0bf;
+  color: var(--color-ink-muted);
   line-height: 1.45;
 }
 
@@ -445,7 +449,7 @@
   gap: 0.25rem;
   border: none;
   background: transparent;
-  color: #9aabcb;
+  color: var(--color-ink-muted);
   cursor: pointer;
   font: inherit;
   padding: 0.15rem;
@@ -468,12 +472,12 @@
 
 .hint {
   font-size: var(--text-small);
-  color: #fbbf24;
+  color: oklch(48% 0.12 55);
 }
 
 .newBest {
   font-size: var(--text-small);
-  color: #5eead4;
+  color: var(--color-accent-strong);
   font-weight: 600;
 }
 
@@ -488,22 +492,31 @@
   height: fit-content;
   position: sticky;
   top: 0.75rem;
+  box-shadow: var(--shadow-card);
 }
 
 .resultWin {
-  background: #0f2a24;
-  border-color: #2dd4bf66;
+  background: oklch(96% 0.03 145);
+  border-color: oklch(70% 0.08 145);
 }
 
 .resultLose {
-  background: #2a1520;
-  border-color: #f472b666;
+  background: oklch(96% 0.03 30);
+  border-color: oklch(75% 0.08 30);
 }
 
 .resultWin h2,
 .resultLose h2 {
   font-family: var(--font-display);
   font-size: 1.35rem;
+  color: var(--color-ink);
+}
+
+.resultWin p,
+.resultLose p {
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
 }
 
 .resultActions {

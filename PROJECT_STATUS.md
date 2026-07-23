@@ -1,8 +1,8 @@
 # PROJECT_STATUS:Yiju(一局)
 
-更新时间:2026-07-21
-当前阶段:**P2 收口完成(M6–M12：五模组可玩 + 局内插图与全程引导)**
-决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/superpowers/plans/2026-07-21-home-and-modules.md`](docs/superpowers/plans/2026-07-21-home-and-modules.md)
+更新时间:2026-07-23
+当前阶段:**挑战局《密码破译》已集成(介绍页 + 浅色游玩 + 首页插画入口);故事局 P2 仍可玩**
+决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/superpowers/plans/2026-07-21-home-and-modules.md`](docs/superpowers/plans/2026-07-21-home-and-modules.md) · [`docs/superpowers/plans/2026-07-23-mastermind-integration.md`](docs/superpowers/plans/2026-07-23-mastermind-integration.md)
 
 ## 里程碑(找猫模组)
 
@@ -32,6 +32,7 @@
 | M12 | 局内插图 + 全程下一步引导 | 已完成 | [#17](https://github.com/Ailian0206/yiju/pull/17) |
 | 引导收紧 | 建议芯片改为开局/卡住才出现,避免点提示一路通关 | 已完成 | main |
 | Pages | 静态导出 + GitHub Pages 公开访问(模板叙述,无线上 LLM) | 已完成 | [#18](https://github.com/Ailian0206/yiju/pull/18) |
+| 挑战局 | 《密码破译》Mastermind:注册表、SVG 封面、介绍页、浅色游玩页 | 进行中(分支 `feat/mastermind-prototype`) | — |
 
 ### P2 已确认产品决策
 

@@ -1,11 +1,17 @@
 # 一局(Yiju)
 
-轻量中文网页文字游戏:借鉴 AI Dungeon 的自由输入交互,但每局有限回合、可见状态、明确通关条件。首发模组《找回走丢的猫》——天黑前用自然语言找回走丢的猫「年糕」。
+轻量中文网页游戏平台:故事局用自然语言推进(有限回合、可见状态、明确结局);另有益智**挑战局**《密码破译》(Mastermind)。
 
 - 产品文档:[`docs/product-plan.md`](docs/product-plan.md)
 - 开发计划:[`docs/development-plan.md`](docs/development-plan.md)
 - 当前进度:[`PROJECT_STATUS.md`](PROJECT_STATUS.md)
 - 在线试玩:[https://ailian0206.github.io/yiju/](https://ailian0206.github.io/yiju/)(GitHub Pages 静态站;**无真实 LLM**,填词区回落模板)
+
+## 挑战局 · 密码破译
+
+- 介绍页:`/challenges/mastermind`(设定、玩法、难度一览)
+- 游玩页:`/challenges/mastermind/play`(浅色暖纸 UI;简单/普通/困难)
+- 与文字引擎解耦,规则在 `src/games/mastermind/`,注册表在 `src/challenges/`
 
 ## 本地开发
 

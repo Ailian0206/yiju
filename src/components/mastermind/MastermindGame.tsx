@@ -211,8 +211,8 @@ export function MastermindGame() {
     <div className={styles.page}>
       <div className={styles.glow} aria-hidden />
       <header className={styles.header}>
-        <Link href="/" className={styles.back}>
-          ← 回主页
+        <Link href="/challenges/mastermind" className={styles.back}>
+          ← 返回介绍
         </Link>
         <p className={styles.eyebrow}>挑战局 · 色码终端</p>
         <h1 className={styles.title}>密码破译</h1>
