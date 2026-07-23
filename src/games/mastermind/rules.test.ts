@@ -4,6 +4,7 @@ import {
   DIFFICULTIES,
   evaluateGuess,
   isWin,
+  rateClearance,
   remainingAttempts,
 } from "./rules";
 
@@ -77,5 +78,14 @@ describe("createSecret / 胜负", () => {
     );
     expect(remainingAttempts(3, 10)).toBe(7);
     expect(remainingAttempts(10, 10)).toBe(0);
+  });
+});
+
+describe("rateClearance(通关评价)", () => {
+  it("按用次占比给出档位", () => {
+    expect(rateClearance(1, 10).id).toBe("perfect");
+    expect(rateClearance(3, 10).id).toBe("great");
+    expect(rateClearance(6, 10).id).toBe("good");
+    expect(rateClearance(9, 10).id).toBe("close");
   });
 });

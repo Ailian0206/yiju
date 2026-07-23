@@ -100,6 +100,46 @@ export function remainingAttempts(
   return Math.max(0, maxAttempts - usedAttempts);
 }
 
+export type ClearanceRating = {
+  id: "perfect" | "great" | "good" | "close";
+  label: string;
+  blurb: string;
+};
+
+/** 按「用掉次数 / 上限」给通关短评,丰富一局收束感。 */
+export function rateClearance(
+  usedAttempts: number,
+  maxAttempts: number,
+): ClearanceRating {
+  const ratio = usedAttempts / maxAttempts;
+  if (ratio <= 0.25) {
+    return {
+      id: "perfect",
+      label: "神速破译",
+      blurb: "几乎一眼看穿规律,终端都来不及闪红灯。",
+    };
+  }
+  if (ratio <= 0.45) {
+    return {
+      id: "great",
+      label: "干净利落",
+      blurb: "信息用得很省,像练过很多次色码推演。",
+    };
+  }
+  if (ratio <= 0.7) {
+    return {
+      id: "good",
+      label: "稳步推进",
+      blurb: "排除法走得稳,密码最终还是露馅了。",
+    };
+  }
+  return {
+    id: "close",
+    label: "压哨破译",
+    blurb: "次数见底才锁死答案——紧张,但过关了。",
+  };
+}
+
 /** 生成秘密码;rng 返回 [0,1),便于测试注入。 */
 export function createSecret(
   config: DifficultyConfig,
