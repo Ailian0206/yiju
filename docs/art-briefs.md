@@ -12,6 +12,12 @@
 | chunyun | public/modules/chunyun/cover.webp | 1536x1024 | 春运夜晚手机抢票界面氛围(不要可读文字),窗外灯火 |
 | plant-week | public/modules/plant-week/cover.webp | 1536x1024 | 阳台绿植与日历/日照,温馨居家一周照顾感 |
 
+## 挑战局封面
+
+| id | path | size | prompt 要点 |
+| --- | --- | --- | --- |
+| mastermind | public/challenges/mastermind/cover.webp | 1536x1024 | 暖纸质感桌面破译盘,彩色钉与黑白反馈钉,午后窗光,益智氛围(无文字/水印/UI) |
+
 ## 局内插图(M12)
 
 路径约定:`public/modules/{id}/scenes/*.webp`。开场可用封面复用;`byEventId` 挂关键推进节点。
