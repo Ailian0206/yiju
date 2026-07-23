@@ -137,6 +137,19 @@ TDD 顺序,每条先红后绿:
 
 **产出分支:**`feat/mastermind-prototype`
 
+### 后续挑战局(多款同型,详见路线图)
+
+完整选型、工程壳与里程碑切片见 [`docs/challenge-games-roadmap.md`](challenge-games-roadmap.md)。
+
+| 里程碑 | 内容 | 状态 |
+| --- | --- | --- |
+| M14 | 挑战局壳抽取(动态 `[id]` 路由 + 共用 Shell) | 待排 |
+| M15 | 海战棋(Battleship,推荐下一款) | 待排 |
+| M16 | 扫雷 | 待排 |
+| M17 | 数织 Nonogram | 待排 |
+
+说明:旧文档 `docs/mastermind-solve-plan.md` 为单局破译策略备忘,不是品类扩展方案。
+
 ---
 
 ## 3. 测试策略汇总
