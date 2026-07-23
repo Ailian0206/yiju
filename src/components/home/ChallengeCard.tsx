@@ -10,7 +10,12 @@ interface ChallengeCardProps {
 /** 主页挑战局卡片:先进介绍页再开玩。 */
 export function ChallengeCard({ challenge }: ChallengeCardProps) {
   const href = `/challenges/${challenge.id}`;
-  const cta = challenge.status === "playable" ? "了解并开始" : "即将开发";
+  const cta =
+    challenge.status === "playable"
+      ? "了解并开始"
+      : challenge.status === "demo"
+        ? "试玩 Demo"
+        : "即将开发";
 
   return (
     <article className={styles.card} data-status={challenge.status}>
@@ -19,6 +24,9 @@ export function ChallengeCard({ challenge }: ChallengeCardProps) {
           <ModuleCover className={styles.cover} src={challenge.coverSrc} />
           {challenge.status === "preview" && (
             <span className={styles.badge}>即将开发</span>
+          )}
+          {challenge.status === "demo" && (
+            <span className={styles.badge}>试玩</span>
           )}
         </div>
         <div className={styles.body}>

@@ -15,4 +15,9 @@ describe("challenges registry", () => {
     expect(getChallenge("mastermind")?.tagline).toMatch(/色码|密码|破译/);
     expect(getChallenge("nope")).toBeUndefined();
   });
+
+  it("含海战棋与扫雷试玩 Demo", () => {
+    expect(getChallenge("battleship")?.status).toBe("demo");
+    expect(getChallenge("minesweeper")?.status).toBe("demo");
+  });
 });

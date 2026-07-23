@@ -8,6 +8,7 @@ export type ChallengeMeta = {
   /** 玩法说明。 */
   howToPlay: string;
   coverSrc: string;
-  status: "playable" | "preview";
+  /** demo=可试玩但非正式立项;preview=仅占位。 */
+  status: "playable" | "demo" | "preview";
   estimatedMinutes: number;
 };
