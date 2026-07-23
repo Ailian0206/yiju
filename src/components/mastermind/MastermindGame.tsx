@@ -118,6 +118,8 @@ export function MastermindGame() {
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [draft, setDraft] = useState<(number | null)[]>([]);
   const [activeSlot, setActiveSlot] = useState(0);
+  /** 本局是否实际写入了更优纪录(避免平局误报「新纪录」) */
+  const [wroteNewBest, setWroteNewBest] = useState(false);
   const best = useSyncExternalStore(
     subscribeBest,
     getBestSnapshot,
@@ -138,6 +140,7 @@ export function MastermindGame() {
       setHistory([]);
       setDraft(Array.from({ length: cfg.codeLength }, () => null));
       setActiveSlot(0);
+      setWroteNewBest(false);
       setPhase("playing");
     },
     [difficulty],
@@ -185,6 +188,7 @@ export function MastermindGame() {
       const current = best[difficulty];
       if (current === undefined || used < current) {
         persistBest({ ...best, [difficulty]: used });
+        setWroteNewBest(true);
       }
       setPhase("won");
       return;
@@ -205,7 +209,7 @@ export function MastermindGame() {
     (config.allowDuplicates || new Set(draft).size === draft.length);
   const clearance =
     phase === "won" ? rateClearance(history.length, config.maxAttempts) : null;
-  const isNewBest = phase === "won" && best[difficulty] === history.length;
+  const isNewBest = phase === "won" && wroteNewBest;
 
   return (
     <div className={styles.page}>

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import type { ChallengeMeta } from "@/challenges/types";
 import { ModuleCover } from "@/components/home/ModuleCover";
