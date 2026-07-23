@@ -61,6 +61,35 @@
   color: var(--color-ink);
 }
 
+.challengeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 28rem;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-line);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-fast), border-color var(--duration-fast);
+}
+
+.challengeCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.challengeCard strong {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--color-ink);
+}
+
+.challengeCard span {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
 /* 大屏一行 4 张,中屏 3 张,首屏多露出几局 */
 .grid {
   display: grid;

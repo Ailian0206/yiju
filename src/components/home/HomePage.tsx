@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { listModules } from "@/content/registry";
 import { ModuleCard } from "@/components/home/ModuleCard";
 import styles from "./HomePage.module.css";
@@ -15,6 +16,15 @@ export function HomePage() {
           每一局都有限时、可见状态和明确结局。用自然语言玩,不是无限闲聊。
         </p>
       </header>
+      <section className={styles.section} aria-labelledby="challenge-heading">
+        <h2 id="challenge-heading" className={styles.sectionTitle}>
+          挑战局(试玩)
+        </h2>
+        <Link href="/challenges/mastermind" className={styles.challengeCard}>
+          <strong>密码破译</strong>
+          <span>Mastermind · 猜颜色序列 · 简单/普通/困难</span>
+        </Link>
+      </section>
       <section className={styles.section} aria-labelledby="module-heading">
         <h2 id="module-heading" className={styles.sectionTitle}>
           选择一局
