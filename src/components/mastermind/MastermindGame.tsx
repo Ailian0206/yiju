@@ -290,163 +290,173 @@ export function MastermindGame() {
             </button>
           </div>
 
-          <ol className={styles.history} aria-label="破译棋盘">
-            {history.map((row, i) => (
-              <li key={`h-${i}`} className={styles.row}>
-                <span className={styles.rowIndex}>{i + 1}</span>
+          <div className={styles.playZone}>
+            <ol className={styles.history} aria-label="破译棋盘">
+              {history.map((row, i) => (
+                <li key={`h-${i}`} className={styles.row}>
+                  <span className={styles.rowIndex}>{i + 1}</span>
+                  <div className={styles.pegs}>
+                    {row.guess.map((c, j) => (
+                      <span
+                        key={j}
+                        className={styles.peg}
+                        style={{ background: PEG_COLORS[c]!.css }}
+                        title={PEG_COLORS[c]!.name}
+                      />
+                    ))}
+                  </div>
+                  <FeedbackKeys
+                    exact={row.feedback.exact}
+                    color={row.feedback.color}
+                    slots={config.codeLength}
+                  />
+                </li>
+              ))}
+
+              {phase === "playing" && (
+                <li className={`${styles.row} ${styles.rowActive}`}>
+                  <span className={styles.rowIndex}>{history.length + 1}</span>
+                  <div className={styles.pegs}>
+                    {draft.map((c, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className={
+                          activeSlot === i ? styles.slotActive : styles.slot
+                        }
+                        style={
+                          c !== null
+                            ? { background: PEG_COLORS[c].css }
+                            : undefined
+                        }
+                        onClick={() => clearSlot(i)}
+                        aria-label={
+                          c === null
+                            ? `第 ${i + 1} 位,空`
+                            : `第 ${i + 1} 位,${PEG_COLORS[c].name},点击清空`
+                        }
+                      />
+                    ))}
+                  </div>
+                  <div className={styles.feedbackPlaceholder} aria-hidden>
+                    待提交
+                  </div>
+                </li>
+              )}
+
+              {Array.from({ length: emptyRows }).map((_, i) => (
+                <li
+                  key={`e-${i}`}
+                  className={`${styles.row} ${styles.rowEmpty}`}
+                  aria-hidden
+                >
+                  <span className={styles.rowIndex}>
+                    {history.length + (phase === "playing" ? 2 : 1) + i}
+                  </span>
+                  <div className={styles.pegs}>
+                    {Array.from({ length: config.codeLength }).map((__, j) => (
+                      <span key={j} className={styles.slotGhost} />
+                    ))}
+                  </div>
+                  <FeedbackKeys exact={0} color={0} slots={config.codeLength} />
+                </li>
+              ))}
+            </ol>
+
+            {phase === "playing" && (
+              <section className={styles.compose} aria-label="选色面板">
+                <p className={styles.composeHint}>
+                  点颜色填入高亮槽位;再点槽位可清空。
+                  {!config.allowDuplicates && "本难度猜测不可重复色。"}
+                </p>
+                <div className={styles.composeBody}>
+                  <div
+                    className={styles.palette}
+                    role="listbox"
+                    aria-label="选色"
+                  >
+                    {palette.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className={styles.swatchBtn}
+                        onClick={() => placeColor(p.id)}
+                        aria-label={p.name}
+                      >
+                        <span
+                          className={styles.swatch}
+                          style={{ background: p.css }}
+                        />
+                        <span className={styles.swatchName}>{p.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.submitBtn}
+                    disabled={!draftReady}
+                    onClick={submitGuess}
+                  >
+                    提交本行
+                  </button>
+                </div>
+                {!config.allowDuplicates &&
+                  draft.every((p) => p !== null) &&
+                  new Set(draft).size !== draft.length && (
+                    <p className={styles.hint}>有重复颜色,请先改掉再提交。</p>
+                  )}
+              </section>
+            )}
+
+            {(phase === "won" || phase === "lost") && (
+              <section
+                className={
+                  phase === "won" ? styles.resultWin : styles.resultLose
+                }
+                aria-live="polite"
+              >
+                <h2>
+                  {phase === "won"
+                    ? (clearance?.label ?? "破译成功")
+                    : "终端锁定失败"}
+                </h2>
+                <p>
+                  {phase === "won"
+                    ? `${clearance?.blurb ?? ""} 共用 ${history.length} 次。`
+                    : "次数耗尽。正确色码是:"}
+                </p>
+                {isNewBest && (
+                  <p className={styles.newBest}>本难度新纪录已写入本机。</p>
+                )}
                 <div className={styles.pegs}>
-                  {row.guess.map((c, j) => (
+                  {secret.map((c, i) => (
                     <span
-                      key={j}
+                      key={i}
                       className={styles.peg}
                       style={{ background: PEG_COLORS[c]!.css }}
                       title={PEG_COLORS[c]!.name}
                     />
                   ))}
                 </div>
-                <FeedbackKeys
-                  exact={row.feedback.exact}
-                  color={row.feedback.color}
-                  slots={config.codeLength}
-                />
-              </li>
-            ))}
-
-            {phase === "playing" && (
-              <li className={`${styles.row} ${styles.rowActive}`}>
-                <span className={styles.rowIndex}>{history.length + 1}</span>
-                <div className={styles.pegs}>
-                  {draft.map((c, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      className={
-                        activeSlot === i ? styles.slotActive : styles.slot
-                      }
-                      style={
-                        c !== null
-                          ? { background: PEG_COLORS[c].css }
-                          : undefined
-                      }
-                      onClick={() => clearSlot(i)}
-                      aria-label={
-                        c === null
-                          ? `第 ${i + 1} 位,空`
-                          : `第 ${i + 1} 位,${PEG_COLORS[c].name},点击清空`
-                      }
-                    />
-                  ))}
-                </div>
-                <div className={styles.feedbackPlaceholder} aria-hidden>
-                  待提交
-                </div>
-              </li>
-            )}
-
-            {Array.from({ length: emptyRows }).map((_, i) => (
-              <li
-                key={`e-${i}`}
-                className={`${styles.row} ${styles.rowEmpty}`}
-                aria-hidden
-              >
-                <span className={styles.rowIndex}>
-                  {history.length + (phase === "playing" ? 2 : 1) + i}
-                </span>
-                <div className={styles.pegs}>
-                  {Array.from({ length: config.codeLength }).map((__, j) => (
-                    <span key={j} className={styles.slotGhost} />
-                  ))}
-                </div>
-                <FeedbackKeys exact={0} color={0} slots={config.codeLength} />
-              </li>
-            ))}
-          </ol>
-
-          {phase === "playing" && (
-            <section className={styles.compose} aria-label="选色面板">
-              <p className={styles.composeHint}>
-                点颜色填入高亮槽位;再点槽位可清空。
-                {!config.allowDuplicates && "本难度猜测不可重复色。"}
-              </p>
-              <div className={styles.palette} role="listbox" aria-label="选色">
-                {palette.map((p) => (
+                <div className={styles.resultActions}>
                   <button
-                    key={p.id}
                     type="button"
-                    className={styles.swatchBtn}
-                    onClick={() => placeColor(p.id)}
-                    aria-label={p.name}
+                    className={styles.primary}
+                    onClick={() => startGame(difficulty)}
                   >
-                    <span
-                      className={styles.swatch}
-                      style={{ background: p.css }}
-                    />
-                    <span className={styles.swatchName}>{p.name}</span>
+                    再来一局
                   </button>
-                ))}
-              </div>
-              <button
-                type="button"
-                className={styles.primary}
-                disabled={!draftReady}
-                onClick={submitGuess}
-              >
-                提交本行
-              </button>
-              {!config.allowDuplicates &&
-                draft.every((p) => p !== null) &&
-                new Set(draft).size !== draft.length && (
-                  <p className={styles.hint}>有重复颜色,请先改掉再提交。</p>
-                )}
-            </section>
-          )}
-
-          {(phase === "won" || phase === "lost") && (
-            <section
-              className={phase === "won" ? styles.resultWin : styles.resultLose}
-              aria-live="polite"
-            >
-              <h2>
-                {phase === "won"
-                  ? (clearance?.label ?? "破译成功")
-                  : "终端锁定失败"}
-              </h2>
-              <p>
-                {phase === "won"
-                  ? `${clearance?.blurb ?? ""} 共用 ${history.length} 次。`
-                  : "次数耗尽。正确色码是:"}
-              </p>
-              {isNewBest && (
-                <p className={styles.newBest}>本难度新纪录已写入本机。</p>
-              )}
-              <div className={styles.pegs}>
-                {secret.map((c, i) => (
-                  <span
-                    key={i}
-                    className={styles.peg}
-                    style={{ background: PEG_COLORS[c]!.css }}
-                    title={PEG_COLORS[c]!.name}
-                  />
-                ))}
-              </div>
-              <div className={styles.resultActions}>
-                <button
-                  type="button"
-                  className={styles.primary}
-                  onClick={() => startGame(difficulty)}
-                >
-                  再来一局
-                </button>
-                <button
-                  type="button"
-                  className={styles.ghost}
-                  onClick={() => setPhase("idle")}
-                >
-                  换难度
-                </button>
-              </div>
-            </section>
-          )}
+                  <button
+                    type="button"
+                    className={styles.ghost}
+                    onClick={() => setPhase("idle")}
+                  >
+                    换难度
+                  </button>
+                </div>
+              </section>
+            )}
+          </div>
         </div>
       )}
     </div>
