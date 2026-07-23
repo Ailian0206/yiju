@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c3d52"/><stop offset="100%" stop-color="#15202e"/></linearGradient></defs>
+  <rect width="960" height="540" fill="url(#g)"/>
+  <g stroke="#d7e2ef" stroke-width="2" fill="#e8eef5">
+    <rect x="250" y="120" width="260" height="260" fill="none" stroke-width="4"/>
+    <path d="M250 206 H510 M250 293 H510 M336 120 V380 M423 120 V380" stroke-width="3"/>
+    <path d="M250 148 H510 M250 177 H510 M250 235 H510 M250 264 H510 M250 322 H510 M250 351 H510 M279 120 V380 M308 120 V380 M365 120 V380 M394 120 V380 M452 120 V380 M481 120 V380" stroke-width="1" opacity="0.45"/>
+  </g>
+  <g fill="#1a2430" font-family="system-ui" font-size="22" font-weight="700" text-anchor="middle">
+    <text x="265" y="142">5</text><text x="293" y="142">3</text><text x="380" y="142">7</text>
+    <text x="265" y="200">6</text><text x="351" y="200">1</text><text x="380" y="200">9</text><text x="408" y="200">5</text>
+    <text x="293" y="258">9</text><text x="322" y="258">8</text><text x="465" y="258">6</text>
+  </g>
+  <text x="560" y="250" fill="#e8eef5" font-family="Georgia,serif" font-size="52">数独</text>
+  <text x="560" y="295" fill="#9bb0c7" font-family="system-ui" font-size="22">行列宫 · 排除收敛</text>
+</svg>

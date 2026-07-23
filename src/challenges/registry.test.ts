@@ -16,8 +16,9 @@ describe("challenges registry", () => {
     expect(getChallenge("nope")).toBeUndefined();
   });
 
-  it("含海战棋与扫雷试玩 Demo", () => {
-    expect(getChallenge("battleship")?.status).toBe("demo");
-    expect(getChallenge("minesweeper")?.status).toBe("demo");
+  it("含数织与数独试玩 Demo", () => {
+    expect(getChallenge("nonogram")?.status).toBe("demo");
+    expect(getChallenge("sudoku")?.status).toBe("demo");
+    expect(getChallenge("battleship")).toBeUndefined();
   });
 });
