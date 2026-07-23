@@ -5,6 +5,9 @@ test.describe("主页选关", () => {
     await page.goto("/");
 
     await expect(page.getByRole("heading", { name: "一局", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "挑战局" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "故事局" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "密码破译" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "找回走丢的猫" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "电梯故障 60 分钟" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "照顾植物一周" })).toBeVisible();
