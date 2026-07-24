@@ -67,9 +67,30 @@ export function NonogramGame() {
         <p className={styles.eyebrow}>试玩 Demo · 数织</p>
         <h1 className={styles.title}>数织</h1>
         <p className={styles.lead}>
-          根据上方与左侧数字线索填黑格。连续黑段长度必须与线索一致。单击循环:空→黑→叉→空。先推理再用「核对」查多填。
+          上方/左侧的数字 = 这一行或这一列里「连续黑格」的长度。单击格子循环:空→黑→叉→空。
         </p>
       </header>
+
+      <aside className={styles.legend} aria-label="线索怎么读">
+        <p className={styles.legendTitle}>线索怎么读</p>
+        <ul className={styles.legendList}>
+          <li>
+            <strong>3</strong>
+            <span>只有一段连续 3 格黑,中间不能断。例如第一行应是:白黑黑黑白</span>
+          </li>
+          <li>
+            <strong>1 1 1</strong>
+            <span>三段各 1 格黑,段与段之间至少隔 1 格白。例如第二行:黑白黑白黑</span>
+          </li>
+          <li>
+            <strong>2 2</strong>
+            <span>两段各 2 格黑,中间至少隔 1 格白。例如第三行:黑黑白黑黑</span>
+          </li>
+        </ul>
+        <p className={styles.legendTip}>
+          行线索管横着看,列线索管竖着看;两边都要对上才算对。不确定是白的格子可以先打叉。
+        </p>
+      </aside>
 
       <div className={styles.toolbar}>
         <div className={styles.diffs} role="group" aria-label="难度">
