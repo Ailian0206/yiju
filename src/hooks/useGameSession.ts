@@ -47,27 +47,31 @@ export function useGameSession(moduleId: string) {
     throw new Error(`模组不可玩或不存在:${moduleId}`);
   }
 
-  // 用 moduleId 作 key 挂载(见 GameScreen);初始化时一次读档,避免 effect 里 setState。
-  const [state, setState] = useState<GameState>(() => {
-    if (typeof window === "undefined") return bundle.createInitialState();
-    return loadSavedState(moduleId) ?? bundle.createInitialState();
-  });
+  // 首屏必须与 SSR 一致(只用初始态);存档在挂载后再灌入,避免水合失败。
+  const [state, setState] = useState<GameState>(() => bundle.createInitialState());
+  const [hydrated, setHydrated] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   // 最近一次 outcome:读档后为 null → 不提示,直到再次卡住
   const [lastOutcomeKind, setLastOutcomeKind] = useState<ActionOutcome["kind"] | null>(null);
   const resolverRef = useRef(createKeywordIntentResolver(bundle.vocabulary));
   const narratorRef = useRef(bundle.createNarrator({ llmNarrator: createLLMNarrator(moduleId) }));
   const eventsRef = useRef(bundle.events);
-  // 挂载首帧跳过保存,防止默认态盖住刚读出的存档
-  const skipNextSaveRef = useRef(true);
 
   useEffect(() => {
-    if (skipNextSaveRef.current) {
-      skipNextSaveRef.current = false;
-      return;
+    const saved = loadSavedState(moduleId);
+    if (saved) {
+      // 有意:挂载后灌档才能与 SSR 首屏对齐
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- 读档必须在客户端挂载后
+      setState(saved);
     }
+    setHydrated(true);
+  }, [moduleId]);
+
+  useEffect(() => {
+    // 等灌档完成后再写回,避免默认态盖住存档
+    if (!hydrated) return;
     saveState(moduleId, state);
-  }, [state, moduleId]);
+  }, [state, moduleId, hydrated]);
 
   const submit = useCallback(
     async (rawText: string) => {

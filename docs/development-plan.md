@@ -118,6 +118,40 @@ TDD 顺序,每条先红后绿:
 
 ---
 
+## 2.1 P3 · 挑战局扩展(与文字引擎解耦)
+
+故事局 P2 收口后,另开「挑战局」品类丰富可玩性。挑战局**不**进入 `engine/`/`content/`,走 `src/challenges/` + `src/games/`。
+
+### M13:密码破译(Mastermind)完整集成
+
+**判定为里程碑的理由:**新增独立品类入口、介绍→游玩全链路、可调难度、Dofun 封面、浅色 UI,对作品集「可玩维度」有实质扩展,需独立门禁与 PR。
+
+- [x] 规则引擎 TDD(`evaluateGuess` / 难度表 / 通关评价)
+- [x] 挑战注册表 `src/challenges/` + 首页 ChallengeCard
+- [x] 介绍页 `/challenges/mastermind` + 游玩页 `/challenges/mastermind/play`
+- [x] Dofun 封面 `public/challenges/mastermind/cover.webp`
+- [x] 浅色暖纸游玩 UI(左右布局、反馈右对齐)
+- [ ] 里程碑门禁:`npm run test:ci` 全绿后提 PR
+
+**验收:**主页挑战局可见插画入口;介绍页可读;三档难度可开玩;单元测试覆盖规则与 registry。
+
+**产出分支:**`feat/mastermind-prototype`
+
+### 后续挑战局(多款同型,详见路线图)
+
+完整选型、工程壳与里程碑切片见 [`docs/challenge-games-roadmap.md`](challenge-games-roadmap.md)。
+
+| 里程碑 | 内容 | 状态 |
+| --- | --- | --- |
+| M14 | 挑战局壳抽取(动态 `[id]` 路由 + 共用 Shell) | 待排 |
+| M15 | 海战棋(Battleship,推荐下一款) | 待排 |
+| M16 | 扫雷 | 待排 |
+| M17 | 数织 Nonogram | 待排 |
+
+说明:旧文档 `docs/mastermind-solve-plan.md` 为单局破译策略备忘,不是品类扩展方案。
+
+---
+
 ## 3. 测试策略汇总
 
 | 层 | 工具 | 重点 |
