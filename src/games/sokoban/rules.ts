@@ -1,16 +1,22 @@
 /** 推箱子:经典符号地图 → 可走/推箱/撤销/通关。 */
 
-export type DifficultyId = "easy" | "normal" | "hard";
+export type LevelTier = "easy" | "normal" | "hard";
 export type Dir = "up" | "down" | "left" | "right";
 
 export type Level = {
-  id: DifficultyId;
+  id: string;
+  index: number;
   label: string;
+  tier: LevelTier;
   rows: string[];
+  /** 已用 BFS 校验的最短通关步数(难度曲线依据) */
+  minMoves: number;
 };
 
 export type Session = {
-  difficulty: DifficultyId;
+  levelId: string;
+  levelIndex: number;
+  tier: LevelTier;
   width: number;
   height: number;
   walls: Set<string>;
@@ -33,48 +39,111 @@ const DELTA: Record<Dir, { x: number; y: number }> = {
   right: { x: 1, y: 0 },
 };
 
+const DIRS: Dir[] = ["up", "down", "left", "right"];
+
 function key(x: number, y: number) {
   return `${x},${y}`;
 }
 
-/** 经典短关:先易后难,均需规划推序。 */
-export const LEVELS: Record<DifficultyId, Level> = {
-  easy: {
-    id: "easy",
-    label: "简单",
-    // 两箱两目标,需绕行再推
-    rows: ["######", "#@ $.#", "# $ .#", "#    #", "######"],
+/**
+ * 关卡包:最短通关步数约每关翻倍(4→9→19→35→60)。
+ * 符号: #墙 @人 $箱 .目标 +人在目标 *箱在目标
+ */
+export const LEVEL_PACK: Level[] = [
+  {
+    id: "1",
+    index: 0,
+    label: "第 1 关",
+    tier: "easy",
+    minMoves: 4,
+    rows: [
+      "#######",
+      "#     #",
+      "# @ $ #",
+      "#   . #",
+      "#     #",
+      "#######",
+    ],
   },
-  normal: {
-    id: "normal",
-    label: "普通",
+  {
+    id: "2",
+    index: 1,
+    label: "第 2 关",
+    tier: "easy",
+    minMoves: 9,
     rows: [
       "########",
       "#      #",
-      "# @$   #",
-      "# $$  .#",
-      "#  .  .#",
+      "# @ $  #",
+      "#  ##  #",
+      "#   .  #",
+      "#      #",
       "########",
     ],
   },
-  hard: {
-    id: "hard",
-    label: "困难",
+  {
+    id: "3",
+    index: 2,
+    label: "第 3 关",
+    tier: "normal",
+    minMoves: 19,
     rows: [
-      "##########",
-      "#   .    #",
-      "# $$ $@$ #",
-      "#   . .  #",
-      "#  $$$   #",
-      "#   . .  #",
-      "##########",
+      "#########",
+      "#       #",
+      "# @ $ $ #",
+      "#  ###  #",
+      "#   . . #",
+      "#       #",
+      "#########",
     ],
   },
+  {
+    id: "4",
+    index: 3,
+    label: "第 4 关",
+    tier: "normal",
+    minMoves: 35,
+    rows: [
+      "#########",
+      "#       #",
+      "# $$@$$.#",
+      "#  ###  #",
+      "# ...   #",
+      "#       #",
+      "#########",
+    ],
+  },
+  {
+    id: "5",
+    index: 4,
+    label: "第 5 关",
+    tier: "hard",
+    minMoves: 60,
+    rows: [
+      "#############",
+      "#           #",
+      "# @ $ $ $   #",
+      "#  #######  #",
+      "#           #",
+      "#         . #",
+      "#        . .#",
+      "#           #",
+      "#############",
+    ],
+  },
+];
+
+const TIER_LABEL: Record<LevelTier, string> = {
+  easy: "简单",
+  normal: "普通",
+  hard: "困难",
 };
 
-export function createSession(
-  level: Level = LEVELS.easy,
-): Session {
+export function tierLabel(tier: LevelTier): string {
+  return TIER_LABEL[tier];
+}
+
+export function createSession(level: Level = LEVEL_PACK[0]!): Session {
   const walls = new Set<string>();
   const goals = new Set<string>();
   const boxes = new Set<string>();
@@ -95,7 +164,9 @@ export function createSession(
   }
 
   return {
-    difficulty: level.id,
+    levelId: level.id,
+    levelIndex: level.index,
+    tier: level.tier,
     width,
     height,
     walls,
@@ -124,13 +195,20 @@ function snapshot(session: Session) {
 }
 
 /** 朝向移动;推箱需前方第二格可入。 */
-export function move(session: Session, dir: Dir): Session {
-  if (session.status === "won") return session;
+export function move(
+  session: Session,
+  dir: Dir,
+): { session: Session; kind: "walk" | "push" | "blocked" } {
+  if (session.status === "won") {
+    return { session, kind: "blocked" };
+  }
   const d = DELTA[dir];
   const nx = session.player.x + d.x;
   const ny = session.player.y + d.y;
   const nk = key(nx, ny);
-  if (session.walls.has(nk)) return session;
+  if (session.walls.has(nk)) {
+    return { session, kind: "blocked" };
+  }
 
   const history = [...session.history, snapshot(session)];
 
@@ -141,13 +219,18 @@ export function move(session: Session, dir: Dir): Session {
       moves: session.moves + 1,
       history,
     };
-    return isWon(next) ? { ...next, status: "won" } : next;
+    return {
+      session: isWon(next) ? { ...next, status: "won" } : next,
+      kind: "walk",
+    };
   }
 
   const bx = nx + d.x;
   const by = ny + d.y;
   const bk = key(bx, by);
-  if (session.walls.has(bk) || session.boxes.has(bk)) return session;
+  if (session.walls.has(bk) || session.boxes.has(bk)) {
+    return { session, kind: "blocked" };
+  }
 
   const boxes = new Set(session.boxes);
   boxes.delete(nk);
@@ -159,7 +242,12 @@ export function move(session: Session, dir: Dir): Session {
     moves: session.moves + 1,
     history,
   };
-  return isWon(next) ? { ...next, status: "won" } : { ...next, status: "playing" };
+  return {
+    session: isWon(next)
+      ? { ...next, status: "won" }
+      : { ...next, status: "playing" },
+    kind: "push",
+  };
 }
 
 export function undo(session: Session): Session {
@@ -173,4 +261,63 @@ export function undo(session: Session): Session {
     history: session.history.slice(0, -1),
     status: "playing",
   };
+}
+
+/** 状态指纹:箱子集合 + 人物位置。 */
+function stateKey(boxes: Set<string>, player: { x: number; y: number }) {
+  return `${[...boxes].sort().join(";")}|${player.x},${player.y}`;
+}
+
+type SearchNode = {
+  boxes: Set<string>;
+  player: { x: number; y: number };
+  dist: number;
+};
+
+/** 最短通关步数(BFS);无解或超限返回 null。 */
+export function shortestSolutionMoves(
+  level: Level,
+  maxStates = 2_500_000,
+): number | null {
+  const start = createSession(level);
+  if (isWon(start)) return 0;
+
+  const seen = new Set<string>();
+  const queue: SearchNode[] = [
+    { boxes: start.boxes, player: start.player, dist: 0 },
+  ];
+  seen.add(stateKey(start.boxes, start.player));
+  let head = 0;
+
+  while (head < queue.length) {
+    if (seen.size > maxStates) return null;
+    const cur = queue[head++]!;
+    const base: Session = {
+      ...start,
+      boxes: cur.boxes,
+      player: cur.player,
+      moves: cur.dist,
+      history: [],
+      status: "playing",
+    };
+    for (const dir of DIRS) {
+      const { session: next, kind } = move(base, dir);
+      if (kind === "blocked") continue;
+      if (isWon(next)) return cur.dist + 1;
+      const sk = stateKey(next.boxes, next.player);
+      if (seen.has(sk)) continue;
+      seen.add(sk);
+      queue.push({
+        boxes: next.boxes,
+        player: next.player,
+        dist: cur.dist + 1,
+      });
+    }
+  }
+  return null;
+}
+
+/** BFS 判定关卡是否可解。 */
+export function isLevelSolvable(level: Level, maxStates = 2_500_000): boolean {
+  return shortestSolutionMoves(level, maxStates) !== null;
 }
