@@ -15,4 +15,10 @@ describe("challenges registry", () => {
     expect(getChallenge("mastermind")?.tagline).toMatch(/色码|密码|破译/);
     expect(getChallenge("nope")).toBeUndefined();
   });
+
+  it("含数织与数独且可正式开玩", () => {
+    expect(getChallenge("nonogram")?.status).toBe("playable");
+    expect(getChallenge("sudoku")?.status).toBe("playable");
+    expect(getChallenge("battleship")).toBeUndefined();
+  });
 });
