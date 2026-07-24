@@ -1,7 +1,7 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-24
-当前阶段:**推箱子正式可玩(M16 进行中)**
+当前阶段:**推箱子已正式可玩(M16 已合入)**
 决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/challenge-games-roadmap.md`](docs/challenge-games-roadmap.md)
 
 ## 里程碑(找猫模组)
