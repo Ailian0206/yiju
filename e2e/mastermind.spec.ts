@@ -5,14 +5,18 @@ test.describe("挑战局 · 密码破译", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "挑战局" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "故事局" })).toBeVisible();
-    await page.getByRole("link", { name: /密码破译/ }).click();
-    await expect(page).toHaveURL(/\/challenges\/mastermind\/?$/);
+    await Promise.all([
+      page.waitForURL(/\/challenges\/mastermind\/?$/),
+      page.locator('a[href="/challenges/mastermind"]').click(),
+    ]);
     await expect(page.getByRole("heading", { name: "密码破译" })).toBeVisible();
     await expect(page.getByText("设定")).toBeVisible();
     await expect(page.getByRole("heading", { name: "玩法" })).toBeVisible();
 
-    await page.getByRole("link", { name: "开始破译" }).click();
-    await expect(page).toHaveURL(/\/challenges\/mastermind\/play/);
+    await Promise.all([
+      page.waitForURL(/\/challenges\/mastermind\/play/),
+      page.getByRole("link", { name: "开始破译" }).click(),
+    ]);
     await page.getByRole("button", { name: /开始破译/ }).click();
 
     for (const name of ["朱红", "琥珀", "麦金", "翠青"]) {
