@@ -145,7 +145,7 @@ TDD 顺序,每条先红后绿:
 - [x] 数独 Sudoku:规则 TDD、三档题面、冲突高亮、本机最短用时
 - [x] 主页 ChallengeCard 与故事局同列宽高
 - [x] Dofun 封面 + 介绍/游玩全链路 + E2E
-- [ ] 里程碑门禁后提 PR
+- [x] 里程碑门禁后提 PR
 
 **产出分支:**`feat/m14-nonogram-sudoku`
 
