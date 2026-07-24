@@ -14,6 +14,8 @@ export function playCtaLabel(id: string): string {
       return "开始数织";
     case "sudoku":
       return "开始数独";
+    case "sokoban":
+      return "开始推箱";
     default:
       return "开始挑战";
   }
@@ -46,6 +48,13 @@ export function difficultyLines(id: string): DiffLine[] {
       const empty = SD[key].givens.flat().filter((n) => n === 0).length;
       return { label: SD[key].label, detail: `约 ${empty} 个空格` };
     });
+  }
+  if (id === "sokoban") {
+    return [
+      { label: "第 1–2 关", detail: "简单 · 最短约 4→9 步" },
+      { label: "第 3–4 关", detail: "普通 · 最短约 19→35 步" },
+      { label: "第 5 关", detail: "困难 · 最短约 60 步" },
+    ];
   }
   return [];
 }

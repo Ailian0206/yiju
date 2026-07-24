@@ -19,6 +19,8 @@ describe("challenges registry", () => {
   it("含数织与数独且可正式开玩", () => {
     expect(getChallenge("nonogram")?.status).toBe("playable");
     expect(getChallenge("sudoku")?.status).toBe("playable");
+    expect(getChallenge("sokoban")?.status).toBe("playable");
+    expect(getChallenge("sokoban")?.coverSrc).toMatch(/sokoban\/cover\.webp/);
     expect(getChallenge("battleship")).toBeUndefined();
   });
 });

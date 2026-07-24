@@ -1,8 +1,8 @@
 # PROJECT_STATUS:Yiju(一局)
 
 更新时间:2026-07-24
-当前阶段:**M15 挑战局壳抽取(动态路由 + 共用介绍布局)**
-决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/challenge-games-roadmap.md`](docs/challenge-games-roadmap.md) · [`docs/superpowers/plans/2026-07-23-mastermind-integration.md`](docs/superpowers/plans/2026-07-23-mastermind-integration.md)
+当前阶段:**推箱子正式可玩(M16 进行中)**
+决策文档:[`docs/product-plan.md`](docs/product-plan.md) · [`docs/development-plan.md`](docs/development-plan.md) · [`docs/challenge-games-roadmap.md`](docs/challenge-games-roadmap.md)
 
 ## 里程碑(找猫模组)
 
@@ -34,7 +34,8 @@
 | Pages | 静态导出 + GitHub Pages 公开访问(模板叙述,无线上 LLM) | 已完成 | [#18](https://github.com/Ailian0206/yiju/pull/18) |
 | 挑战局 M13 | 《密码破译》Mastermind:注册表、Dofun 封面、介绍页、浅色游玩 | 已完成 | [#19](https://github.com/Ailian0206/yiju/pull/19) |
 | 挑战局 M14 | 《数织》+《数独》正式可玩、本机最少落笔、Dofun 封面 | 已完成 | [#20](https://github.com/Ailian0206/yiju/pull/20) |
-| 挑战局 M15 | 动态 `/challenges/[id]` + 共用介绍布局 / PlayMount | 进行中 | — |
+| 挑战局 M15 | 动态 `/challenges/[id]` + 共用介绍布局 / PlayMount | 已完成 | [#21](https://github.com/Ailian0206/yiju/pull/21) |
+| 挑战局 M16 | 《推箱子》正式可玩、Dofun 封面、本机最少步数、难度指数关卡 | 进行中 | [#22](https://github.com/Ailian0206/yiju/pull/22) |
 
 ### P2 已确认产品决策
 
