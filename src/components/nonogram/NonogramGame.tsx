@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import {
   getBestServerSnapshot,
   getBestSnapshot,
@@ -20,14 +20,14 @@ import styles from "./NonogramGame.module.css";
 
 const BEST_KEY = "yiju-nonogram-best";
 
-/** 数织:行列线索推理填格;单击循环 空/黑/叉;本机最短用时。 */
+/** 数织:行列线索推理填格;单击循环 空/黑/叉;本机最少落笔。 */
 export function NonogramGame() {
   const [diff, setDiff] = useState<DifficultyId>("easy");
   const [session, setSession] = useState<Session>(() => createSession("easy"));
   const [errors, setErrors] = useState<Set<string>>(new Set());
   const [checked, setChecked] = useState(false);
+  const [strokes, setStrokes] = useState(0);
   const [wroteNewBest, setWroteNewBest] = useState(false);
-  const startedAt = useRef(Date.now());
 
   const best = useSyncExternalStore(
     (cb) => subscribeBest(BEST_KEY, cb),
@@ -40,15 +40,21 @@ export function NonogramGame() {
     setSession(createSession(id));
     setErrors(new Set());
     setChecked(false);
+    setStrokes(0);
     setWroteNewBest(false);
-    startedAt.current = Date.now();
   }
 
   function onCell(x: number, y: number) {
     if (session.status === "won") return;
-    setSession(cycleCell(session, x, y));
+    const next = cycleCell(session, x, y);
+    const nextStrokes = strokes + 1;
+    setSession(next);
+    setStrokes(nextStrokes);
     setErrors(new Set());
     setChecked(false);
+    if (next.status === "won") {
+      setWroteNewBest(recordIfBetter(BEST_KEY, diff, nextStrokes));
+    }
   }
 
   function onCheck() {
@@ -56,12 +62,6 @@ export function NonogramGame() {
     setErrors(new Set(result.errors));
     setChecked(true);
   }
-
-  useEffect(() => {
-    if (session.status !== "won") return;
-    const secs = Math.max(1, Math.round((Date.now() - startedAt.current) / 1000));
-    setWroteNewBest(recordIfBetter(BEST_KEY, diff, secs));
-  }, [session.status, diff]);
 
   const filled = useMemo(() => {
     let n = 0;
@@ -79,7 +79,6 @@ export function NonogramGame() {
     return n;
   }, [session.solution]);
 
-  // 小盘面放大格宽,大盘面按视口收缩,避免 5×5 看起来像玩具格
   const cellCss =
     session.size <= 5
       ? "clamp(3.2rem, 14vw, 4.4rem)"
@@ -133,7 +132,7 @@ export function NonogramGame() {
               onClick={() => switchDiff(id)}
             >
               {LEVELS[id].label}
-              {best[id] !== undefined ? ` · 最佳 ${best[id]}s` : ""}
+              {best[id] !== undefined ? ` · 最佳 ${best[id]} 笔` : ""}
             </button>
           ))}
         </div>
@@ -146,7 +145,7 @@ export function NonogramGame() {
               ? `有 ${errors.size} 格多填了`
               : checked
                 ? "暂无多填,继续推线索"
-                : `已填 ${filled}/${target}`}
+                : `已填 ${filled}/${target} · ${strokes} 笔`}
         </p>
         <button type="button" className={styles.secondary} onClick={onCheck}>
           核对

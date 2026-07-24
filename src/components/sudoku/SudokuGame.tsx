@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import {
   getBestServerSnapshot,
   getBestSnapshot,
@@ -20,15 +20,15 @@ import styles from "./SudokuGame.module.css";
 
 const BEST_KEY = "yiju-sudoku-best";
 
-/** 数独:选格填数、冲突高亮;本机最短用时。 */
+/** 数独:选格填数、冲突高亮;本机最少落笔。 */
 export function SudokuGame() {
   const [diff, setDiff] = useState<DifficultyId>("easy");
   const [session, setSession] = useState<Session>(() => createSession("easy"));
   const [selected, setSelected] = useState<{ r: number; c: number } | null>(
     null,
   );
+  const [strokes, setStrokes] = useState(0);
   const [wroteNewBest, setWroteNewBest] = useState(false);
-  const startedAt = useRef(Date.now());
 
   const best = useSyncExternalStore(
     (cb) => subscribeBest(BEST_KEY, cb),
@@ -40,8 +40,8 @@ export function SudokuGame() {
     setDiff(id);
     setSession(createSession(id));
     setSelected(null);
+    setStrokes(0);
     setWroteNewBest(false);
-    startedAt.current = Date.now();
   }
 
   function pick(r: number, c: number) {
@@ -52,14 +52,14 @@ export function SudokuGame() {
   function enter(value: number) {
     if (!selected || session.status === "won") return;
     if (session.givenMask[selected.r]![selected.c]) return;
-    setSession(setCell(session, selected.c, selected.r, value));
+    const next = setCell(session, selected.c, selected.r, value);
+    const nextStrokes = strokes + 1;
+    setSession(next);
+    setStrokes(nextStrokes);
+    if (next.status === "won") {
+      setWroteNewBest(recordIfBetter(BEST_KEY, diff, nextStrokes));
+    }
   }
-
-  useEffect(() => {
-    if (session.status !== "won") return;
-    const secs = Math.max(1, Math.round((Date.now() - startedAt.current) / 1000));
-    setWroteNewBest(recordIfBetter(BEST_KEY, diff, secs));
-  }, [session.status, diff]);
 
   const conflictKeys = useMemo(() => {
     const keys = new Set<string>();
@@ -104,7 +104,7 @@ export function SudokuGame() {
               onClick={() => switchDiff(id)}
             >
               {LEVELS[id].label}
-              {best[id] !== undefined ? ` · 最佳 ${best[id]}s` : ""}
+              {best[id] !== undefined ? ` · 最佳 ${best[id]} 笔` : ""}
             </button>
           ))}
         </div>
@@ -113,7 +113,7 @@ export function SudokuGame() {
             ? wroteNewBest
               ? "全部填对！本难度新纪录已写入本机"
               : "全部填对,通关！"
-            : `剩余 ${emptyLeft} 格${conflictKeys.size ? ` · ${conflictKeys.size} 处冲突` : ""}`}
+            : `剩余 ${emptyLeft} 格 · ${strokes} 笔${conflictKeys.size ? ` · ${conflictKeys.size} 处冲突` : ""}`}
         </p>
         <button
           type="button"
