@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  getBestServerSnapshot,
+  getBestSnapshot,
+  recordIfBetter,
+  subscribeBest,
+} from "@/challenges/bestStore";
 import {
   LEVELS,
   checkBoard,
@@ -12,18 +18,30 @@ import {
 } from "@/games/nonogram/rules";
 import styles from "./NonogramGame.module.css";
 
-/** 数织:行列线索推理填格;单击循环 空/黑/叉。 */
+const BEST_KEY = "yiju-nonogram-best";
+
+/** 数织:行列线索推理填格;单击循环 空/黑/叉;本机最短用时。 */
 export function NonogramGame() {
   const [diff, setDiff] = useState<DifficultyId>("easy");
   const [session, setSession] = useState<Session>(() => createSession("easy"));
   const [errors, setErrors] = useState<Set<string>>(new Set());
   const [checked, setChecked] = useState(false);
+  const [wroteNewBest, setWroteNewBest] = useState(false);
+  const startedAt = useRef(Date.now());
+
+  const best = useSyncExternalStore(
+    (cb) => subscribeBest(BEST_KEY, cb),
+    () => getBestSnapshot(BEST_KEY),
+    () => getBestServerSnapshot(BEST_KEY),
+  );
 
   function switchDiff(id: DifficultyId) {
     setDiff(id);
     setSession(createSession(id));
     setErrors(new Set());
     setChecked(false);
+    setWroteNewBest(false);
+    startedAt.current = Date.now();
   }
 
   function onCell(x: number, y: number) {
@@ -38,6 +56,12 @@ export function NonogramGame() {
     setErrors(new Set(result.errors));
     setChecked(true);
   }
+
+  useEffect(() => {
+    if (session.status !== "won") return;
+    const secs = Math.max(1, Math.round((Date.now() - startedAt.current) / 1000));
+    setWroteNewBest(recordIfBetter(BEST_KEY, diff, secs));
+  }, [session.status, diff]);
 
   const filled = useMemo(() => {
     let n = 0;
@@ -109,12 +133,15 @@ export function NonogramGame() {
               onClick={() => switchDiff(id)}
             >
               {LEVELS[id].label}
+              {best[id] !== undefined ? ` · 最佳 ${best[id]}s` : ""}
             </button>
           ))}
         </div>
         <p className={styles.status} data-phase={session.status}>
           {session.status === "won"
-            ? "图案完成！"
+            ? wroteNewBest
+              ? "图案完成！本难度新纪录已写入本机"
+              : "图案完成！"
             : checked && errors.size > 0
               ? `有 ${errors.size} 格多填了`
               : checked
@@ -150,7 +177,6 @@ export function NonogramGame() {
             </div>
           ))}
           {session.rowClues.map((clue, y) => (
-            // fragment 需要稳定 key:用行号包裹
             <div key={`r${y}`} className={styles.rowContents}>
               <div className={styles.clueRow}>
                 {clue.map((n, i) => (

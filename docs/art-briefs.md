@@ -17,6 +17,8 @@
 | id | path | size | prompt 要点 |
 | --- | --- | --- | --- |
 | mastermind | public/challenges/mastermind/cover.webp | 1536x1024 | 暖纸质感桌面破译盘,彩色钉与黑白反馈钉,午后窗光,益智氛围(无文字/水印/UI) |
+| nonogram | public/challenges/nonogram/cover.webp | 1536x1024 | 暖纸桌面数织盘,行列数字线索与部分黑格,午后窗光(无文字/水印/UI) |
+| sudoku | public/challenges/sudoku/cover.webp | 1536x1024 | 暖纸桌面数独九宫格与铅笔,柔和日光益智氛围(无文字/水印/UI) |
 
 ## 局内插图(M12)
 

@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  getBestServerSnapshot,
+  getBestSnapshot,
+  recordIfBetter,
+  subscribeBest,
+} from "@/challenges/bestStore";
 import {
   LEVELS,
   conflictsAt,
@@ -12,26 +18,34 @@ import {
 } from "@/games/sudoku/rules";
 import styles from "./SudokuGame.module.css";
 
-/** 数独:选格后点数字填入;冲突高亮;三档难度。 */
+const BEST_KEY = "yiju-sudoku-best";
+
+/** 数独:选格填数、冲突高亮;本机最短用时。 */
 export function SudokuGame() {
   const [diff, setDiff] = useState<DifficultyId>("easy");
   const [session, setSession] = useState<Session>(() => createSession("easy"));
   const [selected, setSelected] = useState<{ r: number; c: number } | null>(
     null,
   );
+  const [wroteNewBest, setWroteNewBest] = useState(false);
+  const startedAt = useRef(Date.now());
+
+  const best = useSyncExternalStore(
+    (cb) => subscribeBest(BEST_KEY, cb),
+    () => getBestSnapshot(BEST_KEY),
+    () => getBestServerSnapshot(BEST_KEY),
+  );
 
   function switchDiff(id: DifficultyId) {
     setDiff(id);
     setSession(createSession(id));
     setSelected(null);
+    setWroteNewBest(false);
+    startedAt.current = Date.now();
   }
 
   function pick(r: number, c: number) {
     if (session.status === "won") return;
-    if (session.givenMask[r]![c]) {
-      setSelected({ r, c });
-      return;
-    }
     setSelected({ r, c });
   }
 
@@ -40,6 +54,12 @@ export function SudokuGame() {
     if (session.givenMask[selected.r]![selected.c]) return;
     setSession(setCell(session, selected.c, selected.r, value));
   }
+
+  useEffect(() => {
+    if (session.status !== "won") return;
+    const secs = Math.max(1, Math.round((Date.now() - startedAt.current) / 1000));
+    setWroteNewBest(recordIfBetter(BEST_KEY, diff, secs));
+  }, [session.status, diff]);
 
   const conflictKeys = useMemo(() => {
     const keys = new Set<string>();
@@ -84,12 +104,15 @@ export function SudokuGame() {
               onClick={() => switchDiff(id)}
             >
               {LEVELS[id].label}
+              {best[id] !== undefined ? ` · 最佳 ${best[id]}s` : ""}
             </button>
           ))}
         </div>
         <p className={styles.status} data-phase={session.status}>
           {session.status === "won"
-            ? "全部填对,通关！"
+            ? wroteNewBest
+              ? "全部填对！本难度新纪录已写入本机"
+              : "全部填对,通关！"
             : `剩余 ${emptyLeft} 格${conflictKeys.size ? ` · ${conflictKeys.size} 处冲突` : ""}`}
         </p>
         <button

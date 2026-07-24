@@ -131,24 +131,34 @@ TDD 顺序,每条先红后绿:
 - [x] 介绍页 `/challenges/mastermind` + 游玩页 `/challenges/mastermind/play`
 - [x] Dofun 封面 `public/challenges/mastermind/cover.webp`
 - [x] 浅色暖纸游玩 UI(左右布局、反馈右对齐)
-- [ ] 里程碑门禁:`npm run test:ci` 全绿后提 PR
+- [x] 里程碑门禁:`npm run test:ci` 全绿后提 PR
 
 **验收:**主页挑战局可见插画入口;介绍页可读;三档难度可开玩;单元测试覆盖规则与 registry。
 
-**产出分支:**`feat/mastermind-prototype`
+**产出分支:**`feat/mastermind-prototype`(已合并 [#19](https://github.com/Ailian0206/yiju/pull/19))
+
+### M14:数织 + 数独正式挑战局
+
+用户试玩后确认推理向玩法;海战/扫雷 demo 已下架。
+
+- [x] 数织 Nonogram:规则 TDD、三档关卡、线索说明、浅色大盘面、本机最短用时
+- [x] 数独 Sudoku:规则 TDD、三档题面、冲突高亮、本机最短用时
+- [x] 主页 ChallengeCard 与故事局同列宽高
+- [x] Dofun 封面 + 介绍/游玩全链路 + E2E
+- [ ] 里程碑门禁后提 PR
+
+**产出分支:**`feat/m14-nonogram-sudoku`
 
 ### 后续挑战局(多款同型,详见路线图)
 
-完整选型、工程壳与里程碑切片见 [`docs/challenge-games-roadmap.md`](challenge-games-roadmap.md)。
+完整选型见 [`docs/challenge-games-roadmap.md`](challenge-games-roadmap.md)。顺序已按试玩反馈调整:
 
 | 里程碑 | 内容 | 状态 |
 | --- | --- | --- |
-| M14 | 挑战局壳抽取(动态 `[id]` 路由 + 共用 Shell) | 待排 |
-| M15 | 海战棋(Battleship,推荐下一款) | 待排 |
-| M16 | 扫雷 | 待排 |
-| M17 | 数织 Nonogram | 待排 |
+| M15 | 挑战局壳抽取(动态 `[id]` 路由 + 共用 Shell) | 待排 |
+| M16 | 推箱子短关(推理/空间规划) | 待排 |
 
-说明:旧文档 `docs/mastermind-solve-plan.md` 为单局破译策略备忘,不是品类扩展方案。
+说明:旧文档 `docs/mastermind-solve-plan.md` 为单局破译策略备忘,不是品类扩展方案。海战棋/扫雷不再排期(试玩反馈过浅)。
 
 ---
 
