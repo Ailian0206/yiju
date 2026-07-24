@@ -1,6 +1,7 @@
 import type { ChallengeMeta } from "@/challenges/types";
 import { DIFFICULTIES as MM } from "@/games/mastermind/rules";
 import { LEVELS as NG } from "@/games/nonogram/rules";
+import { LEVELS as SK } from "@/games/sokoban/rules";
 import { LEVELS as SD } from "@/games/sudoku/rules";
 
 export type DiffLine = { label: string; detail: string };
@@ -14,6 +15,8 @@ export function playCtaLabel(id: string): string {
       return "开始数织";
     case "sudoku":
       return "开始数独";
+    case "sokoban":
+      return "开始试玩";
     default:
       return "开始挑战";
   }
@@ -46,6 +49,12 @@ export function difficultyLines(id: string): DiffLine[] {
       const empty = SD[key].givens.flat().filter((n) => n === 0).length;
       return { label: SD[key].label, detail: `约 ${empty} 个空格` };
     });
+  }
+  if (id === "sokoban") {
+    return (Object.keys(SK) as Array<keyof typeof SK>).map((key) => ({
+      label: SK[key].label,
+      detail: `${SK[key].rows.length} 行短关 · 规划推序`,
+    }));
   }
   return [];
 }
