@@ -31,7 +31,7 @@ export function ChallengeIntroLayout({ meta }: Props) {
             className={styles.cover}
             src={meta.coverSrc}
             width={960}
-            height={600}
+            height={540}
           />
         </div>
         <div className={styles.content}>
