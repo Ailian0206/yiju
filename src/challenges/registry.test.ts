@@ -16,9 +16,9 @@ describe("challenges registry", () => {
     expect(getChallenge("nope")).toBeUndefined();
   });
 
-  it("含数织与数独试玩 Demo", () => {
-    expect(getChallenge("nonogram")?.status).toBe("demo");
-    expect(getChallenge("sudoku")?.status).toBe("demo");
+  it("含数织与数独且可正式开玩", () => {
+    expect(getChallenge("nonogram")?.status).toBe("playable");
+    expect(getChallenge("sudoku")?.status).toBe("playable");
     expect(getChallenge("battleship")).toBeUndefined();
   });
 });

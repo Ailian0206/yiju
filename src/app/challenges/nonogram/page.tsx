@@ -7,8 +7,8 @@ import { ModuleCover } from "@/components/home/ModuleCover";
 import styles from "../mastermind/ChallengeIntro.module.css";
 
 export const metadata: Metadata = {
-  title: "数织试玩 · 一局",
-  description: "Nonogram 数织试玩:行列线索交叉推理。",
+  title: "数织 · 一局",
+  description: "Nonogram 数织:行列线索交叉推理。",
 };
 
 export default function NonogramIntroPage() {
@@ -31,7 +31,7 @@ export default function NonogramIntroPage() {
           />
         </div>
         <div className={styles.content}>
-          <p className={styles.status}>挑战局 · 试玩 Demo</p>
+          <p className={styles.status}>挑战局 · 可开始</p>
           <h1 className={styles.title}>{meta.title}</h1>
           <p className={styles.tagline}>{meta.tagline}</p>
           <section className={styles.block}>
@@ -55,7 +55,7 @@ export default function NonogramIntroPage() {
           </section>
           <p className={styles.eta}>预计时长约 {meta.estimatedMinutes} 分钟</p>
           <Link href="/challenges/nonogram/play" className={styles.primary}>
-            开始试玩
+            开始数织
           </Link>
         </div>
       </article>

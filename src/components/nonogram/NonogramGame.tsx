@@ -12,7 +12,7 @@ import {
 } from "@/games/nonogram/rules";
 import styles from "./NonogramGame.module.css";
 
-/** 数织试玩:行列线索推理填格;单击循环 空/黑/叉。 */
+/** 数织:行列线索推理填格;单击循环 空/黑/叉。 */
 export function NonogramGame() {
   const [diff, setDiff] = useState<DifficultyId>("easy");
   const [session, setSession] = useState<Session>(() => createSession("easy"));
@@ -55,7 +55,13 @@ export function NonogramGame() {
     return n;
   }, [session.solution]);
 
-  const cellPx = session.size <= 5 ? 2.1 : session.size <= 10 ? 1.55 : 1.15;
+  // 小盘面放大格宽,大盘面按视口收缩,避免 5×5 看起来像玩具格
+  const cellCss =
+    session.size <= 5
+      ? "clamp(3.2rem, 14vw, 4.4rem)"
+      : session.size <= 10
+        ? "clamp(1.9rem, 6.5vw, 2.6rem)"
+        : "clamp(1.35rem, 4.2vw, 1.85rem)";
 
   return (
     <div className={styles.page}>
@@ -64,7 +70,7 @@ export function NonogramGame() {
         <Link href="/challenges/nonogram" className={styles.back}>
           ← 返回介绍
         </Link>
-        <p className={styles.eyebrow}>试玩 Demo · 数织</p>
+        <p className={styles.eyebrow}>挑战局 · 数织</p>
         <h1 className={styles.title}>数织</h1>
         <p className={styles.lead}>
           上方/左侧的数字 = 这一行或这一列里「连续黑格」的长度。单击格子循环:空→黑→叉→空。
@@ -132,7 +138,7 @@ export function NonogramGame() {
           className={styles.grid}
           style={{
             ["--size" as string]: session.size,
-            ["--cell" as string]: `${cellPx}rem`,
+            ["--cell" as string]: cellCss,
           }}
         >
           <div className={styles.corner} />

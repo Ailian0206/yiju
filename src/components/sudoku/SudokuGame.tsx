@@ -12,7 +12,7 @@ import {
 } from "@/games/sudoku/rules";
 import styles from "./SudokuGame.module.css";
 
-/** 数独试玩:选格后点数字填入;冲突高亮;三档难度。 */
+/** 数独:选格后点数字填入;冲突高亮;三档难度。 */
 export function SudokuGame() {
   const [diff, setDiff] = useState<DifficultyId>("easy");
   const [session, setSession] = useState<Session>(() => createSession("easy"));
@@ -66,7 +66,7 @@ export function SudokuGame() {
         <Link href="/challenges/sudoku" className={styles.back}>
           ← 返回介绍
         </Link>
-        <p className={styles.eyebrow}>试玩 Demo · 数独</p>
+        <p className={styles.eyebrow}>挑战局 · 数独</p>
         <h1 className={styles.title}>数独</h1>
         <p className={styles.lead}>
           每行、每列、每个 3×3 宫都要填入 1–9 且不重复。先点空格,再点下方数字。冲突格会标红。困难档空格更多,需要候选与排除。

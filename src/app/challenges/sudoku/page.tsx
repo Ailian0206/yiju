@@ -7,8 +7,8 @@ import { ModuleCover } from "@/components/home/ModuleCover";
 import styles from "../mastermind/ChallengeIntro.module.css";
 
 export const metadata: Metadata = {
-  title: "数独试玩 · 一局",
-  description: "数独试玩:行列宫约束与排除法。",
+  title: "数独 · 一局",
+  description: "数独:行列宫约束与排除法。",
 };
 
 export default function SudokuIntroPage() {
@@ -31,7 +31,7 @@ export default function SudokuIntroPage() {
           />
         </div>
         <div className={styles.content}>
-          <p className={styles.status}>挑战局 · 试玩 Demo</p>
+          <p className={styles.status}>挑战局 · 可开始</p>
           <h1 className={styles.title}>{meta.title}</h1>
           <p className={styles.tagline}>{meta.tagline}</p>
           <section className={styles.block}>
@@ -60,7 +60,7 @@ export default function SudokuIntroPage() {
           </section>
           <p className={styles.eta}>预计时长约 {meta.estimatedMinutes} 分钟</p>
           <Link href="/challenges/sudoku/play" className={styles.primary}>
-            开始试玩
+            开始数独
           </Link>
         </div>
       </article>
